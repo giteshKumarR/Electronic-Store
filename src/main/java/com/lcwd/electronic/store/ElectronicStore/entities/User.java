@@ -20,6 +20,9 @@ public class User {
     // Ids ourselves...
     private String userId;
 
+    @Column(name = "is_user_active", nullable = false)
+    private boolean isUserActive;
+
     @Column(name = "user_name")
     private String userName;
 
