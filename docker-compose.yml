@@ -1,0 +1,19 @@
+services:
+  # MySQL Database Service
+  mysql-db:
+    image: mysql:latest
+    container_name: electronic-store-mysql-database
+    environment:
+      MYSQL_ROOT_USERNAME: root
+      MYSQL_ROOT_PASSWORD: dockermysql@12
+      MYSQL_DATABASE: ElectronicStoreDB
+    ports:
+      - "3331:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+#    networks:
+#      - spring-network
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
