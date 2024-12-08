@@ -86,10 +86,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> searchUser(String keyword) {
-        List<User> allUserEntities = userRepository.findByUserNameLike(keyword);
-        List<UserDto> allUsersDtoList = allUserEntities.stream().map(this::entityToDto).collect(Collectors.toList());
-        return allUsersDtoList;
+    public UserDto searchUser(String keyword) {
+        User user = userRepository.findByUserNameContaining(keyword).orElseThrow(() -> new RuntimeException("User not found with given keyword"));
+        return entityToDto(user);
     }
 
 
