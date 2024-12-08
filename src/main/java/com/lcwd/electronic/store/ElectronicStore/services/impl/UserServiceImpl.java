@@ -4,6 +4,7 @@ import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper mapper;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -91,30 +95,30 @@ public class UserServiceImpl implements UserService {
 
     // DTO --> Entity
     private User dtoToEntity(UserDto userDto) {
-        User user = User.builder()
-                .userId(userDto.getUserId())
-                .isUserActive(userDto.isUserActive())
-                .userName(userDto.getUserName())
-                .userEmail(userDto.getUserEmail())
-                .userPassword(userDto.getUserPassword())
-                .userGender(userDto.getUserGender())
-                .userAbout(userDto.getUserAbout())
-                .userProfileImage(userDto.getUserProfileImage())
-                .build();
-        return user;
+//        User user = User.builder()
+//                .userId(userDto.getUserId())
+//                .isUserActive(userDto.isUserActive())
+//                .userName(userDto.getUserName())
+//                .userEmail(userDto.getUserEmail())
+//                .userPassword(userDto.getUserPassword())
+//                .userGender(userDto.getUserGender())
+//                .userAbout(userDto.getUserAbout())
+//                .userProfileImage(userDto.getUserProfileImage())
+//                .build();
+        return mapper.map(userDto, User.class);
     }
     // Entity --> DTO
     private UserDto entityToDto(User savedUser) {
-        UserDto userDto = UserDto.builder()
-                .userId(savedUser.getUserId())
-                .isUserActive(savedUser.isUserActive())
-                .userName(savedUser.getUserName())
-                .userEmail(savedUser.getUserEmail())
-                .userPassword(savedUser.getUserPassword())
-                .userGender(savedUser.getUserGender())
-                .userAbout(savedUser.getUserAbout())
-                .userProfileImage(savedUser.getUserProfileImage())
-                .build();
-        return userDto;
+//        UserDto userDto = UserDto.builder()
+//                .userId(savedUser.getUserId())
+//                .isUserActive(savedUser.isUserActive())
+//                .userName(savedUser.getUserName())
+//                .userEmail(savedUser.getUserEmail())
+//                .userPassword(savedUser.getUserPassword())
+//                .userGender(savedUser.getUserGender())
+//                .userAbout(savedUser.getUserAbout())
+//                .userProfileImage(savedUser.getUserProfileImage())
+//                .build();
+        return mapper.map(savedUser, UserDto.class);
     }
 }
