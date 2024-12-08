@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
         user.setUserPassword(userWithUpdatedDetails.getUserPassword());
         user.setUserGender(userWithUpdatedDetails.getUserGender());
-        user.setUserActive(userWithUpdatedDetails.isUserActive());
+        user.setUserStatus(userWithUpdatedDetails.getUserStatus());
         user.setUserAbout(userWithUpdatedDetails.getUserAbout());
         user.setUserProfileImage(userWithUpdatedDetails.getUserProfileImage());
 
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with given userId not found!!"));
 
         // Soft delete
-//        user.setUserActive(false);
+//        user.setUserStatus("Inactive");
 //        userRepository.save(user);
 
         //Hard Delete

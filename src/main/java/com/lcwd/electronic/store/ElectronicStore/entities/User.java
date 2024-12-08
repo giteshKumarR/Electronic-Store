@@ -20,8 +20,8 @@ public class User {
     // Ids ourselves...
     private String userId;
 
-    @Column(name = "is_user_active", nullable = false)
-    private boolean isUserActive;
+    @Column(name = "user_status", nullable = false, length = 8)
+    private String UserStatus;
 
     @Column(name = "user_name")
     private String userName;
