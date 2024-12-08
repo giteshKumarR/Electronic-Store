@@ -60,7 +60,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with given userId not found!!"));
-        // TODO: 12/8/2024 : Add the soft delete logic
+
+        // Soft delete
+//        user.setUserActive(false);
+//        userRepository.save(user);
+
+        //Hard Delete
         userRepository.delete(user);
     }
 
