@@ -3,6 +3,7 @@ package com.lcwd.electronic.store.ElectronicStore.controllers;
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.payload.ApiResponseMessage;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,13 @@ public class UserController {
 
     // create
     @PostMapping("/create-user")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
     }
 
     // update
     @PutMapping("/update-user/{userId}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userWithUpdatedDetails,
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userWithUpdatedDetails,
                                               @PathVariable String userId) {
         return new ResponseEntity<>(userService.updateUser(userWithUpdatedDetails, userId), HttpStatus.OK);
 
