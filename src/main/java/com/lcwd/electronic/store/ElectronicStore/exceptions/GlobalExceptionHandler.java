@@ -45,4 +45,15 @@ public class GlobalExceptionHandler {
                 });
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    // Email update exception
+    @ExceptionHandler(CannotChangeEmailException.class)
+    public ResponseEntity<ApiResponseMessage> cannotChangeEmailExceptionHandler(CannotChangeEmailException ex) {
+        ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .success(true)
+                .build();
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
 }

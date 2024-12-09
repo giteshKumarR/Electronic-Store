@@ -2,6 +2,7 @@ package com.lcwd.electronic.store.ElectronicStore.services.impl;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.CannotChangeEmailException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
         user.setUserName(userWithUpdatedDetails.getUserName());
         // Email we are not going to set again
         if(!userWithUpdatedDetails.getUserEmail().equals(user.getUserEmail())) {
-            throw new RuntimeException("Cannot change Email");
+            throw new CannotChangeEmailException("Cannot Update Email");
         }
 
         user.setUserPassword(userWithUpdatedDetails.getUserPassword());
