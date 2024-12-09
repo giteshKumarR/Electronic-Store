@@ -2,6 +2,7 @@ package com.lcwd.electronic.store.ElectronicStore.services.impl;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userWithUpdatedDetails, String userId) {
         // Ub yaha request me DTO aayga to hum dto se entity banayenge to save the new details
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with given userId"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User not found with given userId"));
         user.setUserName(userWithUpdatedDetails.getUserName());
         // Email we are not going to set again
         if(!userWithUpdatedDetails.getUserEmail().equals(user.getUserEmail())) {
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with given userId not found!!"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given userId not found!!"));
 
         // Soft delete
 //        user.setUserStatus("Inactive");
@@ -75,13 +76,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with given userId"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User not found with given userId"));
         return entityToDto(user);
     }
 
     @Override
     public UserDto getUserByEmail(String userEmail) {
-        User user = userRepository.findByUserEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found with given email"));
+        User user = userRepository.findByUserEmail(userEmail).orElseThrow(() -> new ResourseNotFoundException("User not found with given email"));
         return entityToDto(user);
     }
 
