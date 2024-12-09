@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.ElectronicStore.dtos;
 
+import com.lcwd.electronic.store.ElectronicStore.validate.ImageNameValid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -35,5 +36,7 @@ public class UserDto {
 
     @NotBlank(message = "Write Something about yourself !!")
     private String userAbout;
+
+    @ImageNameValid
     private String userProfileImage;
 }
