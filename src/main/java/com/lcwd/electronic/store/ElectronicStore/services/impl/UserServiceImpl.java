@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,13 +60,24 @@ public class UserServiceImpl implements UserService {
         return entityToDto(updatedUser);
     }
 
-    @Override
-    public List<UserDto> getAllUsers(Integer pageNumber, Integer pageSize) {
+     @Override
+    public List<UserDto> getAllUsers(Integer pageNumber,
+                                     Integer pageSize,
+                                     String sortBy,
+                                     String sortDir) {
 
         // PageNumber default starts from zero
         // 1. We pass the pageNumber and pageSize to get a Pagable object
         //    Here the PageRequest.of() method will accept the pageNumber and pageSize.
-        Pageable pagable = PageRequest.of(pageNumber, pageSize);
+
+//         Sort sort = Sort.by(sortBy);  // when we are sorting by only a field name
+
+         // For Conditional sorting
+         Sort sort = (sortDir.equalsIgnoreCase("desc"))
+                 ? (Sort.by(sortBy).descending())
+                 :(Sort.by(sortBy).ascending());
+
+         Pageable pagable = PageRequest.of(pageNumber, pageSize, sort);
 
         // 2. Pass the Pagable object to the .findAll method
         Page<User> pageObject = userRepository.findAll(pagable);
