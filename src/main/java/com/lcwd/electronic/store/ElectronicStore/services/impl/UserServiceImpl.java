@@ -8,6 +8,9 @@ import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,9 +60,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> allUserEntities = userRepository.findAll();
-        List<UserDto> allUsersDtoList = allUserEntities.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
+    public List<UserDto> getAllUsers(Integer pageNumber, Integer pageSize) {
+
+        // PageNumber default starts from zero
+        // 1. We pass the pageNumber and pageSize to get a Pagable object
+        //    Here the PageRequest.of() method will accept the pageNumber and pageSize.
+        Pageable pagable = PageRequest.of(pageNumber, pageSize);
+
+        // 2. Pass the Pagable object to the .findAll method
+        Page<User> pageObject = userRepository.findAll(pagable);
+
+        // 3. We will not get the list directly for th findAll method, we will get a pagable object
+        //    like shown above and then from that object if we do .getContent() then we will get the list..
+        List<User> users = pageObject.getContent();
+        List<UserDto> allUsersDtoList = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
         return allUsersDtoList;
     }
 
