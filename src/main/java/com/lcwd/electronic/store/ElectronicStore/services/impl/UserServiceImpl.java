@@ -4,10 +4,16 @@ import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.CannotChangeEmailException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
+import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,11 +62,45 @@ public class UserServiceImpl implements UserService {
         return entityToDto(updatedUser);
     }
 
-    @Override
-    public List<UserDto> getAllUsers() {
-        List<User> allUserEntities = userRepository.findAll();
-        List<UserDto> allUsersDtoList = allUserEntities.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
-        return allUsersDtoList;
+     @Override
+    public PagableResponse<UserDto> getAllUsers(Integer pageNumber,
+                                                     Integer pageSize,
+                                                     String sortBy,
+                                                     String sortDir) {
+
+        // PageNumber default starts from zero
+        // 1. We pass the pageNumber and pageSize to get a Pagable object
+        //    Here the PageRequest.of() method will accept the pageNumber and pageSize.
+
+//         Sort sort = Sort.by(sortBy);  // when we are sorting by only a field name
+
+         // For Conditional sorting
+         Sort sort = (sortDir.equalsIgnoreCase("desc"))
+                 ? (Sort.by(sortBy).descending())
+                 :(Sort.by(sortBy).ascending());
+
+         // By default pageNumber starts with 0 but if we want to start with 1 just pass paguNumber-1 to below
+         // function and in the request param pass 1 so here due to the below logic it will behave like the
+         // page number is starting form 1 but at the backend it is 0 only..
+         // Also one thing we need to just do a plus 1 for the current page number ie. pageObject.getPageNumber
+         // in the Helper method in the Helper package as we changed the logic and getPageNumber (current page number)
+         // Also represent the index of the page so it must be incremented....
+         //
+//         Pageable pagable = PageRequest.of(pageNumber-1, pageSize, sort);
+         Pageable pagable = PageRequest.of(pageNumber, pageSize, sort);
+
+        // 2. Pass the Pagable object to the .findAll method
+        Page<User> pageObject = userRepository.findAll(pagable);
+
+        // 3. We will not get the list directly for th findAll method, we will get a pagable object
+        //    like shown above and then from that object if we do .getContent() then we will get the list..
+
+
+         // This method is now a general method i.e it can be used for any of the
+         // module to convert the pagable object to the response and return it...
+         PagableResponse<UserDto> pagableResponse = Helper.getPagableResponse(pageObject, UserDto.class);
+
+         return pagableResponse;
     }
 
     @Override
