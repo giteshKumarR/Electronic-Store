@@ -5,6 +5,7 @@ import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -22,7 +23,7 @@ public interface UserService {
                                       String sortDir);
 
     // Delete User
-    void deleteUser(String userId);
+    void deleteUser(String userId) throws IOException;
 
     // Get single user by Id
     UserDto getUserById(String userId);
