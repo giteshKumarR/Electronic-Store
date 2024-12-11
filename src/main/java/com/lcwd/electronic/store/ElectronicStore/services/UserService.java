@@ -2,6 +2,7 @@ package com.lcwd.electronic.store.ElectronicStore.services;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
+import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +16,10 @@ public interface UserService {
     UserDto updateUser(UserDto userWithUpdatedDetails, String userId);
 
     // Get All Users
-    List<UserDto> getAllUsers(Integer pageNumber,
-                              Integer pageSize,
-                              String sortBy,
-                              String sortDir);
+    PagableResponse<UserDto> getAllUsers(Integer pageNumber,
+                                      Integer pageSize,
+                                      String sortBy,
+                                      String sortDir);
 
     // Delete User
     void deleteUser(String userId);
