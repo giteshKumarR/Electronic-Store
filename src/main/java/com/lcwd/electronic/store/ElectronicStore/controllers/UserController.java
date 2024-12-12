@@ -98,10 +98,11 @@ public class UserController {
             @RequestParam("userImage")MultipartFile image,
             @PathVariable String userId
             ) throws IOException {
-        String imagename = fileService.uploadImage(image, imageUploadPath);
+
 
         // We need to put the image name in the user record in the database
         UserDto user = userService.getUserById(userId);
+        String imagename = fileService.uploadImage(image, imageUploadPath);
         user.setUserProfileImage(imagename);
         UserDto userDto = userService.updateUser(user, userId);
 
