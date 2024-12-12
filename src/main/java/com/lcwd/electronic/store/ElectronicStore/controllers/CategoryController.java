@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/category-api/")
 public class CategoryController {
@@ -53,5 +55,11 @@ public class CategoryController {
     @GetMapping("/get-by-id/{categoryId}")
     public ResponseEntity<CategoryDto> getUserById(@PathVariable String categoryId) {
         return new ResponseEntity<>(categoryService.getCategoryById(categoryId), HttpStatus.FOUND);
+    }
+
+    // search category by Keyword
+    @GetMapping("/search-category/{keyword}")
+    public ResponseEntity<List<CategoryDto>> searchCategories(@PathVariable String keyword) {
+        return new ResponseEntity<>(categoryService.searchCategory(keyword), HttpStatus.FOUND);
     }
 }

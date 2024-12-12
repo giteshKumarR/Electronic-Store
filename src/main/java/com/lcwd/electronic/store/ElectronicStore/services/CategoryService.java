@@ -28,4 +28,5 @@ public interface CategoryService {
     CategoryDto getCategoryById(String categoryId);
 
     // Search (Implement If needed)
+    List<CategoryDto> searchCategory(String keyword);
 }

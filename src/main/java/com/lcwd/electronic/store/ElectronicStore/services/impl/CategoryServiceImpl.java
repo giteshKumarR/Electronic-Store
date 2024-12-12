@@ -15,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -78,7 +80,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getCategoryById(String categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourseNotFoundException("Category Not found !!"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourseNotFoundException("Category with given categoryId Not found !!"));
         return mapper.map(category, CategoryDto.class);
+    }
+
+    @Override
+    public List<CategoryDto> searchCategory(String keyword) {
+        List<Category> byCategoryNameContaining = categoryRepository.findByCategoryTitleContaining(keyword);
+        return byCategoryNameContaining.stream()
+                .map(category -> {
+                    return new ModelMapper().map(category, CategoryDto.class);
+                }).collect(Collectors.toList());
     }
 }
