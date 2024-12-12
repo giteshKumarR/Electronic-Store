@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @Entity
+@Table(name = "categories")
 public class Category {
     @Id
     @Column(name = "category_id")
