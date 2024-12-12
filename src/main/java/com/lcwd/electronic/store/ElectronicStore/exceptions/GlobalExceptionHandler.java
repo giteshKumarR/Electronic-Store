@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
                 .message(ex.getMessage())
                 .status(HttpStatus.NOT_FOUND)
-                .success(true) // means ki request aai has successfully but resource nahi mila
+                .success(false) // means ki request aai has successfully but resource nahi mila
                 .build();
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
         ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
                 .message(ex.getMessage())
                 .status(HttpStatus.BAD_REQUEST)
-                .success(true)
+                .success(false)
                 .build();
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
