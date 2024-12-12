@@ -8,23 +8,35 @@ import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.repositories.CategoryRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.CategoryService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+    private Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapper mapper;
+
+    @Value("${category.cover.image.path}")
+    private String categoryCoverImagesUploadPath;
 
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
@@ -58,6 +70,21 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(String categoryId) {
         // See if the category present or not for given ID
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourseNotFoundException("Category Not found !!"));
+
+        // Delete user image from the images folder
+        // 1. We get the full path to delete the image
+        String fullPath = categoryCoverImagesUploadPath + category.getCategoryCoverImage();
+        // 2. We need to create a path then pass that path to Delete function in Files to delete the file.
+
+        try {
+            Path path = Paths.get(fullPath);
+            Files.delete(path);
+        } catch (NoSuchFileException ex) {
+            logger.info("Category Cover image not found in Folder");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         categoryRepository.delete(category);
     }
 
