@@ -1,10 +1,12 @@
 package com.lcwd.electronic.store.ElectronicStore.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -29,6 +31,7 @@ public class ProductDto {
     private boolean isProductLive;
     private boolean isProductOutOfStock;
     private String sku; //Stock Keeping Unit for Inventory Management
-    private LocalDateTime productAddedDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date productAddedDate;
     private String productImage;
 }

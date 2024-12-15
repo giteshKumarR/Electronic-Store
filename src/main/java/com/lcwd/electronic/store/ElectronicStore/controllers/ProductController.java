@@ -2,14 +2,25 @@ package com.lcwd.electronic.store.ElectronicStore.controllers;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.ProductDto;
 import com.lcwd.electronic.store.ElectronicStore.payload.ApiResponseMessage;
+import com.lcwd.electronic.store.ElectronicStore.payload.ImageResponse;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
+import com.lcwd.electronic.store.ElectronicStore.services.FileService;
 import com.lcwd.electronic.store.ElectronicStore.services.ProductService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @RequestMapping("/v1/product-api/")
@@ -17,6 +28,11 @@ public class ProductController {
     private Logger logger = LoggerFactory.getLogger(ProductController.class);
     @Autowired
     private ProductService productService;
+    @Autowired
+    private FileService fileService;
+
+    @Value("${product.cover.image.path}")
+    private String productImageUploadPath;
 
     // Create
     @PostMapping("/create-product")
@@ -129,5 +145,37 @@ public class ProductController {
                 fragment,
                 pageNumber, pageSize, sortBy, sortDir
         ), HttpStatus.OK);
+    }
+    
+    // Upload Product Image
+    @PostMapping("/upload-product-image/{productId}")
+    public ResponseEntity<ImageResponse> uploadProductImage(
+            @RequestParam("productImage")MultipartFile image,
+            @PathVariable String productId
+            ) throws IOException {
+        ProductDto product = productService.getProductByID(productId);
+        String imageName = fileService.uploadImage(image, productImageUploadPath);
+        product.setProductImage(imageName);
+        productService.updateProduct(product, productId);
+
+        ImageResponse imageResponse = ImageResponse.builder()
+                .imageName(imageName)
+                .message("Product Image uploaded Successfully")
+                .success(true)
+                .status(HttpStatus.CREATED)
+                .build();
+        return new ResponseEntity<>(imageResponse, HttpStatus.CREATED);
+    }
+
+    // Serving product Image
+    @GetMapping("/serve-product-image/{productId}")
+    public void serveProductImage(
+            @PathVariable String productId,
+            HttpServletResponse response
+    ) throws IOException {
+        ProductDto product = productService.getProductByID(productId);
+        InputStream resource = fileService.getResource(productImageUploadPath, product.getProductImage());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource, response.getOutputStream());
     }
 }

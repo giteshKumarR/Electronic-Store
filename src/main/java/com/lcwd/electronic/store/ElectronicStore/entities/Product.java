@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.ElectronicStore.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -31,7 +33,8 @@ public class Product {
     private boolean isProductLive;
     private boolean isProductOutOfStock;
     private String sku; //Stock Keeping Unit for Inventory Management
-    private LocalDateTime productAddedDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date productAddedDate;
     private String productImage;
 
 

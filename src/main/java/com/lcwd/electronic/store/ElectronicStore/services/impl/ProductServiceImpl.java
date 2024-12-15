@@ -13,12 +13,18 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -28,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     @Autowired
     private ModelMapper mapper;
+    @Value("${product.cover.image.path}")
+    private String productImageUploadPath;
 
 
     @Override
@@ -73,6 +81,21 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(String productId) {
         // Without image deletion logic
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourseNotFoundException("Product with given Id not found !!"));
+
+        // Delete user image from the images folder
+        // 1. We get the full path to delete the image
+        String fullPath = productImageUploadPath + product.getProductImage();
+        // 2. We need to create a path then pass that path to Delete function in Files to delete the file.
+
+        try {
+            Path path = Paths.get(fullPath);
+            Files.delete(path);
+        } catch (NoSuchFileException ex) {
+            logger.info("Category Cover image not found in Folder");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         productRepository.delete(product);
     }
 
