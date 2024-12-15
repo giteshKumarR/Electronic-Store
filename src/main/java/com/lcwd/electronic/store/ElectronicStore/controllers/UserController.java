@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
-@RequestMapping("v1/user-api/")
+@RequestMapping("v1/user-api")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired

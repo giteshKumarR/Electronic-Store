@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/category-api/")
+@RequestMapping("/v1/category-api")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;

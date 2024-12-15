@@ -1,9 +1,6 @@
 package com.lcwd.electronic.store.ElectronicStore.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +27,7 @@ public class Product {
     private Integer productRating;
     private Double productPrice;
     private Double productDiscountedPrice;
-    private Integer stockQuantity;
+    private Integer productStockQuantity;
     private boolean isProductLive;
     private boolean isProductOutOfStock;
     private String sku; //Stock Keeping Unit for Inventory Management
@@ -41,4 +38,15 @@ public class Product {
     // these two fields fare for tracking purposes
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
+
+    @PrePersist
+    public void onPrePersist() {
+        // This will run only when the entity will be first created
+        this.createdOn = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.updatedOn = LocalDateTime.now();
+    }
 }
