@@ -1,6 +1,7 @@
 package com.lcwd.electronic.store.ElectronicStore.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,12 @@ public class Product {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date productAddedDate;
     private String productImage;
+
+    // When we fetch Product the category will be fetch eagerly with the product
+    // not need to wait for demand...
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 
     // these two fields fare for tracking purposes

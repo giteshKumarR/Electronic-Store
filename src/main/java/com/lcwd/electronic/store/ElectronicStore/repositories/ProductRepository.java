@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.ElectronicStore.repositories;
 
+import com.lcwd.electronic.store.ElectronicStore.entities.Category;
 import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +59,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     // MULTIPLE
     Page<Product> findBySkuContainingIgnoreCase(String skuFragment, Pageable pageable);
+
+    Page<Product> findByCategory(Category category, Pageable pageable);
 
     // search all Products that are active/Live products under a brand containing under a category containing
 

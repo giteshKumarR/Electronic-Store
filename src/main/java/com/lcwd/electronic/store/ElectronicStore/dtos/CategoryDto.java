@@ -1,9 +1,13 @@
 package com.lcwd.electronic.store.ElectronicStore.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +28,6 @@ public class CategoryDto {
     private String categoryDescription;
 
     private String categoryCoverImage;
+//    We don't have to show this in response
+//    private List<ProductDto> productList;
 }

@@ -1,9 +1,12 @@
 package com.lcwd.electronic.store.ElectronicStore.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,6 +31,14 @@ public class Category {
 
     @Column(name = "category_updated_on")
     private LocalDateTime updatedOn;
+
+    // Manage OneToMany relationship with Product entity
+    // fetch type Lazy means that when we fetch category, product are not fetched
+    // eagerly they will only be fetched on demand
+    @OneToMany(mappedBy = "category",
+        cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private List<Product> products;
 
     @PrePersist
     public void onPrePersist() {
