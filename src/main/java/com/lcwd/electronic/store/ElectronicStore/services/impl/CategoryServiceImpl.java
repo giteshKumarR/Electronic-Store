@@ -7,6 +7,7 @@ import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.repositories.CategoryRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.CategoryService;
+import com.lcwd.electronic.store.ElectronicStore.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private ProductService productService;
 
     @Value("${category.cover.image.path}")
     private String categoryCoverImagesUploadPath;
@@ -50,6 +53,9 @@ public class CategoryServiceImpl implements CategoryService {
         // Convert savedCategory entity object to Category Dto
         return mapper.map(savedCategory, CategoryDto.class);
     }
+
+
+
 
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDtoWithUpdatedDetails, String categoryId) {

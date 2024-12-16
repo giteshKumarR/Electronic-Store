@@ -7,6 +7,7 @@ import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
+import com.lcwd.electronic.store.ElectronicStore.repositories.CategoryRepository;
 import com.lcwd.electronic.store.ElectronicStore.repositories.ProductRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.ProductService;
 import org.modelmapper.ModelMapper;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -32,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
     private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapper mapper;
     @Value("${product.cover.image.path}")
@@ -45,12 +49,38 @@ public class ProductServiceImpl implements ProductService {
         productDto.setProductId(uniqueId);
 
         // TODO: 12/15/2024 :  generate a unique SKU
-        
+//        String sku = Helper.generateSKU(productDto);
+//        logger.info("Sku : {}",sku);
+//        productDto.setSku(sku);
 
         Product product = mapper.map(productDto, Product.class);
         Product savedProduct = productRepository.save(product);
         return mapper.map(savedProduct, ProductDto.class);
     }
+
+    @Override
+    public ProductDto createProductWithCategory(ProductDto productDto, String categoryId) {
+        // We will find the category using the category repository
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourseNotFoundException("Category with given Id not found"));
+        // map the incoming Product DTO object to Product entity object, to set various fields..
+        Product product = mapper.map(productDto, Product.class);
+        // Set productId
+        String productId = UUID.randomUUID().toString();
+        product.setProductId(productId);
+        product.setProductAddedDate(new Date());
+        product.setCategory(category);
+
+        // Set the SKU
+        String sku = Helper.generateSKU(product);
+        logger.info("SKU : {}",sku);
+        product.setSku(sku);
+
+        // Save the product in DB
+        Product savedProduct = productRepository.save(product);
+
+        return mapper.map(savedProduct, ProductDto.class);
+    }
+
 
     @Override
     public ProductDto updateProduct(ProductDto productWithUpdatedDetails, String productId) {
@@ -68,13 +98,31 @@ public class ProductServiceImpl implements ProductService {
         product.setProductStockQuantity(productWithUpdatedDetails.getProductStockQuantity());
         product.setProductLive(productWithUpdatedDetails.isProductLive());
         product.setProductOutOfStock(productWithUpdatedDetails.isProductOutOfStock());
-        product.setSku(productWithUpdatedDetails.getSku());
+//        product.setSku(productWithUpdatedDetails.getSku());
+        // Say if there are any changes then new SKU can be generated and assigned
+        String sku = Helper.generateSKU(product);
+        logger.info("SKU : {}",sku);
+        product.setSku(sku);
+
         product.setProductAddedDate(productWithUpdatedDetails.getProductAddedDate());
         product.setProductImage(productWithUpdatedDetails.getProductImage());
 
         // Save updated product to DB
         Product updatedProduct = productRepository.save(product);
         return mapper.map(updatedProduct, ProductDto.class);
+    }
+
+    @Override
+    public ProductDto updateCategoryOfProduct(String productId, String categoryId) {
+        //Find the product and category associated to the given IDs
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourseNotFoundException("Product with given Id not found"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourseNotFoundException("Category with given Id not found"));
+        // Set the category
+        product.setCategory(category);
+        // Set new SKU
+        product.setSku(Helper.generateSKU(product));
+        Product savedProduct = productRepository.save(product);
+        return mapper.map(savedProduct, ProductDto.class);
     }
 
     @Override
@@ -106,6 +154,21 @@ public class ProductServiceImpl implements ProductService {
                 :(Sort.by(sortBy).ascending());
         Pageable pagable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Product> pageObject = productRepository.findAll(pagable);
+        PagableResponse<ProductDto> pagableResponse = Helper.getPagableResponse(pageObject, ProductDto.class);
+
+        return pagableResponse;
+    }
+
+    @Override
+    public PagableResponse<ProductDto> getAllProductsOfCategory(String categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourseNotFoundException("Category with given ID not found"));
+        Sort sort = (sortDir.equalsIgnoreCase("desc"))
+                ? (Sort.by(sortBy).descending())
+                :(Sort.by(sortBy).ascending());
+
+        Pageable pagable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<Product> pageObject = productRepository.findByCategory(category, pagable);
         PagableResponse<ProductDto> pagableResponse = Helper.getPagableResponse(pageObject, ProductDto.class);
 
         return pagableResponse;

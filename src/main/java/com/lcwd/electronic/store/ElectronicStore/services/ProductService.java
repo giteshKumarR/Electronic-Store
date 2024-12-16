@@ -9,14 +9,28 @@ public interface ProductService {
     // Create product
     ProductDto createProduct(ProductDto productDto);
 
+    // Create product with category
+    ProductDto createProductWithCategory(ProductDto productDto, String categoryId);
+
     // Update product
     ProductDto updateProduct(ProductDto productWithUpdatedDetails, String productId);
+
+    // Update Category of a product
+    ProductDto updateCategoryOfProduct(String productId, String categoryId);
 
     // search all products
     PagableResponse<ProductDto> getAllProducts(Integer pageNumber,
                                                Integer pageSize,
                                                String sortBy,
                                                String sortDir);
+
+    // Get all the products of a given Category (category ID)
+    PagableResponse<ProductDto> getAllProductsOfCategory(
+            String categoryId,
+            Integer pageNumber,
+            Integer pageSize,
+            String sortBy,
+            String sortDir);
 
     // search product by ID
     ProductDto getProductByID(String productId);

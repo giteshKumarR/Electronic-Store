@@ -40,10 +40,27 @@ public class ProductController {
         return new ResponseEntity<>(productService.createProduct(productDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/create-product-with-category/{categoryId}")
+    public ResponseEntity<ProductDto> createProductWithCategory(
+            @RequestBody ProductDto productDto,
+            @PathVariable String categoryId
+    ) {
+        return new ResponseEntity<>(productService.createProductWithCategory(productDto, categoryId), HttpStatus.CREATED);
+    }
+
     // update
     @PutMapping("/update-product/{productId}")
     public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto updatedProductDto,@PathVariable String productId) {
         return new ResponseEntity<>(productService.updateProduct(updatedProductDto, productId), HttpStatus.OK);
+    }
+
+    // update category of a product
+    @PutMapping("/update-product/{productId}/category/{categoryId}")
+    public ResponseEntity<ProductDto> updateProductCategory(
+            @PathVariable String productId,
+            @PathVariable String categoryId
+    ) {
+        return new ResponseEntity<>(productService.updateCategoryOfProduct(productId, categoryId), HttpStatus.OK);
     }
 
     // get all products
@@ -56,6 +73,21 @@ public class ProductController {
     ) {
         return new ResponseEntity<>(productService.getAllProducts(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
+
+    // get products of a category
+    @GetMapping("/get-products-with-category/{categoryId}")
+    public ResponseEntity<PagableResponse<ProductDto>> getProductsOfCategory(
+            @PathVariable String categoryId,
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "productName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
+    ) {
+        return new ResponseEntity<>(productService.getAllProductsOfCategory(categoryId,pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
+
+
+
     // get single by id
     @GetMapping("/get-by-id/{productId}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable String productId) {

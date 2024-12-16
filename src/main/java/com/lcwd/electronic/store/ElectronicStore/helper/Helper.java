@@ -1,11 +1,15 @@
 package com.lcwd.electronic.store.ElectronicStore.helper;
 
+import com.lcwd.electronic.store.ElectronicStore.dtos.ProductDto;
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
+import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,5 +31,25 @@ public class Helper {
         response.setLastPage(pageObject.isLast());
 
         return response;
+    }
+
+    public static String generateSKU(Product product) {
+        // Create a simple SKU format
+        String categoryCode = product.getCategory() != null ?
+                product.getCategory().getCategoryTitle().substring(0, 3).toUpperCase() : "GEN";
+
+        String productNameCode = product.getProductName().substring(0,
+                Math.min(product.getProductName().length(), 4)).toUpperCase();
+
+        String timestamp = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("MMdd"));
+
+        // Generate unique SKU
+        return String.format("%s-%s-%s-%d",
+                categoryCode,
+                productNameCode,
+                timestamp,
+                product.hashCode() % 1000
+        );
     }
 }

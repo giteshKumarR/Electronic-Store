@@ -1,6 +1,7 @@
 package com.lcwd.electronic.store.ElectronicStore.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lcwd.electronic.store.ElectronicStore.entities.Category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -34,4 +35,6 @@ public class ProductDto {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date productAddedDate;
     private String productImage;
+
+    private CategoryDto category;
 }
