@@ -20,7 +20,10 @@ public class Cart {
     @OneToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
     private List<CartItem> cartItems;
 
     private Double totalCartPrice;
