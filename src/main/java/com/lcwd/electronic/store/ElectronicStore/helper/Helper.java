@@ -1,7 +1,10 @@
 package com.lcwd.electronic.store.ElectronicStore.helper;
 
+import com.lcwd.electronic.store.ElectronicStore.dtos.CartDto;
+import com.lcwd.electronic.store.ElectronicStore.dtos.CartItemDto;
 import com.lcwd.electronic.store.ElectronicStore.dtos.ProductDto;
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
+import com.lcwd.electronic.store.ElectronicStore.entities.Cart;
 import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
@@ -51,5 +54,27 @@ public class Helper {
                 timestamp,
                 product.hashCode() % 1000
         );
+    }
+
+    public static CartDto mapCartEntityToCartDto(Cart cart) {
+        ModelMapper mapper = new ModelMapper();
+        UserDto userDto = mapper.map(cart.getUser(), UserDto.class);
+
+        List<CartItemDto> cartItemDtoList = cart.getCartItems().stream()
+                .map(cartItem -> {
+                    // Here we are mapping the Product to Product DTo and also CartItem to CartItemDto
+                    ProductDto cartItemProductDto = mapper.map(cartItem.getProduct(), ProductDto.class);
+                    CartItemDto cartItemDto = mapper.map(cartItem, CartItemDto.class);
+                    cartItemDto.setProductDto(cartItemProductDto);
+                    return cartItemDto;
+                })
+                .collect(Collectors.toList());
+
+
+        CartDto map = mapper.map(cart, CartDto.class);
+        map.setUserDto(userDto);
+        map.setCartItemDtoList(cartItemDtoList);
+
+        return map;
     }
 }

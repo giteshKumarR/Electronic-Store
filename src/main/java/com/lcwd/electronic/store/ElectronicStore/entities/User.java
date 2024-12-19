@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.ElectronicStore.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,6 +41,10 @@ public class User {
 
     @Column(name = "user_profile_image")
     private String userProfileImage;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("user") // this will prevent infinite recursion in JSON serialisation, and will prevent user details to be included in JSON.
+    private Cart cart;
 
     @Column(name = "user_created_on")
     private LocalDateTime createdOn;
