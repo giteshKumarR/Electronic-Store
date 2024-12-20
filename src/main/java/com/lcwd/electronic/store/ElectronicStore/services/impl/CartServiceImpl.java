@@ -41,7 +41,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartDto addItemToCart(String userId, AddItemToCartRequest request) {
         // Fetch the user with userId
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User not found with given User ID"));logger.info("User : {}", user);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User not found with given User ID"));
         // Take out the information of product quantity and product ID from AddItemToCartRequest request
         Integer quantity = request.getQuantity();
         String productId = request.getProductId();
@@ -64,7 +64,6 @@ public class CartServiceImpl implements CartService {
             // 2. Now our job is to set the cart items
 //            List<CartItem> cartItems = newCart.getCartItems(); // this will be an empty list
             List<CartItem> cartItems = new ArrayList<>(); // this will be an empty list
-            logger.info("Cart Item list : {}", cartItems);
 
             CartItem newCartItem = CartItem.builder()
                     .product(product)
@@ -72,9 +71,7 @@ public class CartServiceImpl implements CartService {
                     .totalPrice(product.getProductPrice() * quantity)
                     .cart(newCart)
                     .build();
-            logger.info("New Cart Item : {}", newCartItem);
             cartItems.add(newCartItem);
-            logger.info("Modified Cart Items list : {}", cartItems);
             // attached the list of cart Items to the newly created Cart
             newCart.setCartItems(cartItems);
             newCart.setTotalCartItems(cartItems.size());
@@ -96,17 +93,14 @@ public class CartServiceImpl implements CartService {
             for(CartItem cartItem: cartItems) {
                 //  If we find any product already in the cart just update the quantity and total price
                 if(cartItem.getProduct().getProductId().equalsIgnoreCase(productId)) {
-                    logger.info("Already present Cart Item : {}", cartItem);
                     isProductAlreadyPresentInCart = true;
                     cartItem.setQuantity(cartItem.getQuantity()+quantity);
                     cartItem.setTotalPrice(cartItem.getQuantity()*product.getProductPrice());
-                    logger.info("Already present Cart Item modified quantity: {}", cartItem);
 
                     double sum = cartItems.stream()
                             .mapToDouble(CartItem::getTotalPrice)
                             .sum();
                     existingCart.setTotalCartPrice(sum);
-                    logger.info("Modified total price of the Cart : {}", sum);
                 }
             }
             if(!isProductAlreadyPresentInCart) {
@@ -121,7 +115,6 @@ public class CartServiceImpl implements CartService {
                 cartItems.add(newCartItem);
                 // attached the list of cart Items to the newly created Cart
                 existingCart.setCartItems(cartItems);
-                logger.info("Cart Item list : {}", cartItems);
                 existingCart.setTotalCartItems(cartItems.size());
                 double sum = cartItems.stream()
                         .mapToDouble(CartItem::getTotalPrice)
