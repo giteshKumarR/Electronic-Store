@@ -7,6 +7,7 @@ import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.MoreQuantityThanStockException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.ZeroQuantityException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.cartpayload.AddItemToCartRequest;
 import com.lcwd.electronic.store.ElectronicStore.repositories.CartItemRepository;
@@ -42,6 +43,10 @@ public class CartServiceImpl implements CartService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User not found with given User ID"));
         // Take out the information of product quantity and product ID from AddItemToCartRequest request
         Integer quantity = request.getQuantity();
+        if(quantity == 0) {
+            throw new ZeroQuantityException("Quantity cannot be zero !!");
+        }
+
         String productId = request.getProductId();
 
         // Fetch the product with productId

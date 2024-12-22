@@ -90,4 +90,13 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(ZeroQuantityException.class)
+    public ResponseEntity<ApiResponseMessage> zeroQuantityExceptionHandler(ZeroQuantityException ex) {
+        ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .build();
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
 }
