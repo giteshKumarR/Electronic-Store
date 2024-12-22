@@ -1,16 +1,14 @@
 package com.lcwd.electronic.store.ElectronicStore.services.impl;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.CartDto;
-import com.lcwd.electronic.store.ElectronicStore.dtos.CartItemDto;
-import com.lcwd.electronic.store.ElectronicStore.dtos.ProductDto;
-import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.Cart;
 import com.lcwd.electronic.store.ElectronicStore.entities.CartItem;
 import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.MoreQuantityThanStockException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
-import com.lcwd.electronic.store.ElectronicStore.payload.AddItemToCartRequest;
+import com.lcwd.electronic.store.ElectronicStore.payload.cartpayload.AddItemToCartRequest;
 import com.lcwd.electronic.store.ElectronicStore.repositories.CartItemRepository;
 import com.lcwd.electronic.store.ElectronicStore.repositories.CartRepository;
 import com.lcwd.electronic.store.ElectronicStore.repositories.ProductRepository;
@@ -48,6 +46,12 @@ public class CartServiceImpl implements CartService {
 
         // Fetch the product with productId
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourseNotFoundException(("User with given Id not found!!")));
+
+        // Fix: Say if the quantity of the products requested is more than the stock quantity then
+        //      it should not be added...
+        if(!product.isProductOutOfStock() || !product.isProductLive() || quantity > product.getProductStockQuantity()) {
+            throw new MoreQuantityThanStockException("Product " + product.getProductName() + "is not available in requested quantity!!");
+        }
 
         // Now using the user we will fetch the cart
         Optional<Cart> cart = cartRepository.findByUser(user);
@@ -167,6 +171,9 @@ public class CartServiceImpl implements CartService {
     public void removeAllFromCart(String userId) {
         Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart not found for the given user !!"));
         List<CartItem> cartItemList = cart.getCartItems();
+        if(cartItemList.isEmpty()) {
+            throw new ResourseNotFoundException("Cart is Already Empty!!");
+        }
         cartItemList.forEach(cartItem -> {
             removeItemFromCart(userId, cartItem.getCartItemId());
             logger.info("Deleted successfully");

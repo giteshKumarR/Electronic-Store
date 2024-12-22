@@ -1,6 +1,7 @@
 package com.lcwd.electronic.store.ElectronicStore.entities;
 
 import com.lcwd.electronic.store.ElectronicStore.enums.OrderStatus;
+import com.lcwd.electronic.store.ElectronicStore.enums.PaymentMethod;
 import com.lcwd.electronic.store.ElectronicStore.enums.PaymentStatus;
 import com.lcwd.electronic.store.ElectronicStore.enums.ShippingMethod;
 import jakarta.persistence.*;
@@ -22,7 +23,7 @@ public class Order {
     private String orderId;
 
     @Column(nullable = false, unique = true)
-    private String OrderNumber;  // to uniquely identity an order
+    private String orderNumber;  // to uniquely identity an order
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
@@ -69,8 +70,8 @@ public class Order {
     })
     private Address billingAddress;
 
-    @Column(nullable = false)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     private String paymentTransactionId;
 
