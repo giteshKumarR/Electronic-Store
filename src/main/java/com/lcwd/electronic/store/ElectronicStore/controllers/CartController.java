@@ -1,7 +1,7 @@
 package com.lcwd.electronic.store.ElectronicStore.controllers;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.CartDto;
-import com.lcwd.electronic.store.ElectronicStore.payload.AddItemToCartRequest;
+import com.lcwd.electronic.store.ElectronicStore.payload.cartpayload.AddItemToCartRequest;
 import com.lcwd.electronic.store.ElectronicStore.payload.ApiResponseMessage;
 import com.lcwd.electronic.store.ElectronicStore.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
