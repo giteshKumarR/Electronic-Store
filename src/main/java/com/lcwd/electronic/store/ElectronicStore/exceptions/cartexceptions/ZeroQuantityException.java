@@ -1,4 +1,4 @@
-package com.lcwd.electronic.store.ElectronicStore.exceptions;
+package com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions;
 
 public class ZeroQuantityException extends RuntimeException{
     public ZeroQuantityException() {

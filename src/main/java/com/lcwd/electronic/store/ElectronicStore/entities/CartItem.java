@@ -17,7 +17,7 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // For mysql IDENTITY means that the value will AUTO increment
     private Long cartItemId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     @Column(nullable = false)

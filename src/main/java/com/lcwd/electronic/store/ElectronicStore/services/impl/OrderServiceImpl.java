@@ -6,8 +6,10 @@ import com.lcwd.electronic.store.ElectronicStore.enums.OrderStatus;
 import com.lcwd.electronic.store.ElectronicStore.enums.PaymentMethod;
 import com.lcwd.electronic.store.ElectronicStore.enums.PaymentStatus;
 import com.lcwd.electronic.store.ElectronicStore.enums.ShippingMethod;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.BadApiRequestException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.EmptyCartException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.orderexceptions.NoOrderException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.payload.orderpayload.OrderRequest;
@@ -136,6 +138,9 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getAllOrdersOfUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given ID not found !!"));
         List<Order> userOrders = orderRepository.findByUser(user);
+        if(userOrders.isEmpty()) {
+            throw new NoOrderException("Currently User has no Orders !!");
+        }
         return userOrders.stream()
                 .map(order -> mapper.map(order, OrderDto.class))
                 .toList();
@@ -145,7 +150,12 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(String userId, String orderId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given Id not found !!"));
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourseNotFoundException("Order with given Id not found !!"));
-        orderRepository.delete(order);
+        if(order.getUser().getUserId().equalsIgnoreCase(user.getUserId())) {
+            orderRepository.delete(order);
+        } else {
+            logger.info("User ID passed and user Id associated with the order didn't Match!!! ");
+            throw new BadApiRequestException("Some issue occurred while Deleting the order !!");
+        }
     }
 
     @Override

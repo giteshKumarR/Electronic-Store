@@ -5,10 +5,9 @@ import com.lcwd.electronic.store.ElectronicStore.entities.Cart;
 import com.lcwd.electronic.store.ElectronicStore.entities.CartItem;
 import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.EmptyCartException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.MoreQuantityThanStockException;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.ZeroQuantityException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.ZeroQuantityException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.cartpayload.AddItemToCartRequest;
 import com.lcwd.electronic.store.ElectronicStore.repositories.CartItemRepository;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {

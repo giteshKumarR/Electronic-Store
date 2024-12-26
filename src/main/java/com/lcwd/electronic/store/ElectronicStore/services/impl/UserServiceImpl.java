@@ -2,8 +2,8 @@ package com.lcwd.electronic.store.ElectronicStore.services.impl;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.CannotChangeEmailException;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.CannotChangeEmailException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
