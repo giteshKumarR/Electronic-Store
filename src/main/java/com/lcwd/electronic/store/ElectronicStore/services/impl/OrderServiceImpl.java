@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException(("User with given Id not found !!")));
 
         // 2. Check if the cart is present or not for the user.
-        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart for the given user not found!!"));
+        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new ResourseNotFoundException("Cart for the given user not found!!"));
 
         // 3. Validate the cart Items
         validateCartItems(cart);
@@ -80,7 +80,8 @@ public class OrderServiceImpl implements OrderService {
         Double tax = subtotal*0.18;
         order.setTax(tax);
 
-        Double shipCost = subtotal*0.5;
+        // Shipping Cost is 5%
+        Double shipCost = subtotal*0.05;
         order.setShippingCost(shipCost);
 
         order.setTotalAmountAfterTax(subtotal + tax + shipCost);
@@ -133,7 +134,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getAllOrdersOfUser(String userId) {
-        List<Order> userOrders = orderRepository.findByUser_UserId(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given ID not found !!"));
+        List<Order> userOrders = orderRepository.findByUser(user);
         return userOrders.stream()
                 .map(order -> mapper.map(order, OrderDto.class))
                 .toList();
