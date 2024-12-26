@@ -6,6 +6,7 @@ import com.lcwd.electronic.store.ElectronicStore.entities.CartItem;
 import com.lcwd.electronic.store.ElectronicStore.entities.Product;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.EmptyCartException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.MoreQuantityThanStockException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.ZeroQuantityException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
@@ -54,7 +55,10 @@ public class CartServiceImpl implements CartService {
 
         // Fix: Say if the quantity of the products requested is more than the stock quantity then
         //      it should not be added...
-        if(!product.isProductOutOfStock() || !product.isProductLive() || quantity > product.getProductStockQuantity()) {
+//        if(!product.isProductOutOfStock() || !product.isProductLive() || quantity > product.getProductStockQuantity()) {
+//            throw new MoreQuantityThanStockException("Product " + product.getProductName() + "is not available in requested quantity!!");
+//        }
+        if(quantity > product.getProductStockQuantity()) {
             throw new MoreQuantityThanStockException("Product " + product.getProductName() + "is not available in requested quantity!!");
         }
 
@@ -105,11 +109,7 @@ public class CartServiceImpl implements CartService {
                     isProductAlreadyPresentInCart = true;
                     cartItem.setQuantity(cartItem.getQuantity()+quantity);
                     cartItem.setTotalPrice(cartItem.getQuantity()*product.getProductPrice());
-
-                    double sum = cartItems.stream()
-                            .mapToDouble(CartItem::getTotalPrice)
-                            .sum();
-                    existingCart.setTotalCartPrice(sum);
+                    existingCart.setTotalCartPrice(calculateTotalPrice(existingCart));
                 }
             }
             if(!isProductAlreadyPresentInCart) {
@@ -125,10 +125,7 @@ public class CartServiceImpl implements CartService {
                 // attached the list of cart Items to the newly created Cart
                 existingCart.setCartItems(cartItems);
                 existingCart.setTotalCartItems(cartItems.size());
-                double sum = cartItems.stream()
-                        .mapToDouble(CartItem::getTotalPrice)
-                        .sum();
-                existingCart.setTotalCartPrice(sum);
+                existingCart.setTotalCartPrice(calculateTotalPrice(existingCart));
             }
             Cart savedCart = cartRepository.save(existingCart);
             return Helper.mapCartEntityToCartDto(savedCart);
@@ -137,61 +134,50 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeItemFromCart(String userId, Long cartItemId) {
-        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart not found for the given user !!"));
-        List<CartItem> cartItems = cart.getCartItems();
-        if(cartItems.isEmpty()) {
-            throw new ResourseNotFoundException("No items in Cart!!");
-        } else {
-            boolean isCartItemPresent = cartItems.stream()
-                    .anyMatch(item -> item.getCartItemId().equals(cartItemId));
-            if(!isCartItemPresent) {
-                throw new ResourseNotFoundException("CartItem not present with given Id not present in the cart!!");
-            }
-            //NOTE:  We will be sure that the CartItem with cartItemId is present, now our job is to completely
-            // delete from the DB but before this we have to remove its relation with cart and product.
+        CartItem cartItemToBeRemoved = cartItemRepository.findById(cartItemId).orElseThrow(() -> new ResourseNotFoundException("Cart Item with given id not found !!"));
+        int quantityToBeReduced = cartItemToBeRemoved.getQuantity();
+        Double priceToBeReduced = cartItemToBeRemoved.getTotalPrice();
+        logger.info("Price that is going to be reduced : {}", priceToBeReduced);
+        cartItemRepository.delete(cartItemToBeRemoved);
 
-            // Make a new list excluding the cart item to be removed
-            List<CartItem> modifiedCartItemList = cartItems.stream()
-                    .filter(item -> !item.getCartItemId().equals(cartItemId))
-                    .collect(Collectors.toList());
-            cart.setCartItems(modifiedCartItemList);
-            cart.setTotalCartItems(modifiedCartItemList.size());
-            double sum = modifiedCartItemList.stream()
-                    .mapToDouble(CartItem::getTotalPrice)
-                    .sum();
-            cart.setTotalCartPrice(sum);
+        // Update the cart total price and cart item quantity
+        Cart updatedCart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException(("Cart for given user not found !!")));
+        updatedCart.setTotalCartItems(updatedCart.getTotalCartItems()-1);
+        updatedCart.setTotalCartPrice(calculateTotalPrice(updatedCart));
 
-            // We are good to delete the to be deleted Cart Item from the DB
-            CartItem cartItemToBeRemoved = cartItemRepository.findById(cartItemId).get();
-
-            cartItemToBeRemoved.setCart(null);
-            cartItemToBeRemoved.setProduct(null);
-            cartItemRepository.delete(cartItemToBeRemoved);
-            // Save the modified cart to DB
-            cartRepository.save(cart);
-        }
+        cartRepository.save(updatedCart);
     }
 
+
+    // TODO: 12/23/2024  
     @Override
     public void removeAllFromCart(String userId) {
-        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart not found for the given user !!"));
-        List<CartItem> cartItemList = cart.getCartItems();
-        if(cartItemList.isEmpty()) {
-            throw new ResourseNotFoundException("Cart is Already Empty!!");
-        }
-        cartItemList.forEach(cartItem -> {
-            removeItemFromCart(userId, cartItem.getCartItemId());
-            logger.info("Deleted successfully");
-        });
-        cart.setCartItems(Collections.emptyList());
+        // Fetch the user for DB
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given Id not found!!"));
 
-        // Save the modified cart to DB
+        // Fetch the Cart that is associated with the user
+        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new ResourseNotFoundException("Cart associated to the given user not found !!"));
+        cart.getCartItems().clear();
+        cart.setTotalCartItems(0);
+        cart.setTotalCartPrice(0.0);
         cartRepository.save(cart);
+
     }
 
     @Override
     public CartDto searchCartByUser(String userId) {
         Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart not fund with given UserId"));
         return Helper.mapCartEntityToCartDto(cart);
+    }
+
+    // Helper functions
+
+    // Calculates the Sum of Total price
+    private Double calculateTotalPrice(Cart cart) {
+        List<CartItem> cartItems = cart.getCartItems();
+        double sum = cartItems.stream()
+                .mapToDouble(CartItem::getTotalPrice)
+                .sum();
+        return sum;
     }
 }
