@@ -1,5 +1,7 @@
 package com.lcwd.electronic.store.ElectronicStore.exceptions;
 
+import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.EmptyCartException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.MoreQuantityThanStockException;
 import com.lcwd.electronic.store.ElectronicStore.payload.ApiResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +62,27 @@ public class GlobalExceptionHandler {
     // Bad api request exception handler
     @ExceptionHandler(BadApiRequestException.class)
     public ResponseEntity<ApiResponseMessage> badApiRequestExceptionHandler(BadApiRequestException ex) {
+        ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .build();
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    // Empty cart exception handler
+    @ExceptionHandler(EmptyCartException.class)
+    public ResponseEntity<ApiResponseMessage> emptyCartExceptionHandler(EmptyCartException ex) {
+        ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .build();
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+    // More quantity than Stock exception handler
+    @ExceptionHandler(MoreQuantityThanStockException.class)
+    public ResponseEntity<ApiResponseMessage> moreQuantityThanStockExceptionHandler(MoreQuantityThanStockException ex) {
         ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
                 .message(ex.getMessage())
                 .status(HttpStatus.BAD_REQUEST)

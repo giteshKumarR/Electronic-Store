@@ -7,13 +7,14 @@ import lombok.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@ToString(exclude = "cart")
 @Entity
 @Table(name = "users")
 public class User {
@@ -45,6 +46,12 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("user") // this will prevent infinite recursion in JSON serialisation, and will prevent user details to be included in JSON.
     private Cart cart;
+
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE // means ki agar user remove hua to orders bhi remove ho jayenge
+    )
+    private List<Order> orderList;
 
     @Column(name = "user_created_on")
     private LocalDateTime createdOn;

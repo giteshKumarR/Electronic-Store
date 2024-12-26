@@ -1,7 +1,7 @@
 package com.lcwd.electronic.store.ElectronicStore.services;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.CartDto;
-import com.lcwd.electronic.store.ElectronicStore.payload.AddItemToCartRequest;
+import com.lcwd.electronic.store.ElectronicStore.payload.cartpayload.AddItemToCartRequest;
 
 public interface CartService {
 //    NOTE : UserID is important as Cart is associated to User....
