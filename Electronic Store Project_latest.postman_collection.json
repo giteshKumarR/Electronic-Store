@@ -1,0 +1,1161 @@
+{
+	"info": {
+		"_postman_id": "1815598d-6eca-4853-871c-d1a454f3bdbe",
+		"name": "Electronic Store Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37896494"
+	},
+	"item": [
+		{
+			"name": "User-Module",
+			"item": [
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"userStatus\": \"Inactive\",\r\n    \"userName\": \"Bob The Builder\",\r\n    \"userEmail\": \"bob@builder.com\",\r\n    \"userPassword\": \"bobthebuilder\",\r\n    \"userGender\": \"M\",\r\n    \"userAbout\": \"Can we fix it? Yes we can!\",\r\n    \"userProfileImage\": \"bob.png\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{User-api-link}}/create-user",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"create-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upadte user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"[Upt]Sarah Thompson\",\r\n    \"userEmail\": \"alice@wonderland.com\",\r\n    \"userPassword\": \"adventureTime2023\",\r\n    \"userGender\": \"F\",\r\n    \"userAbout\": \"Travel blogger exploring hidden gems around the world\",\r\n    \"userProfileImage\": \"741792cf-b501-48eb-bde8-060d0bef1f13.jpg\",\r\n    \"userStatus\": \"Inactive\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{User-api-link}}/update-user/32dfe215-e325-4160-8b46-1f7a372605b3",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"update-user",
+								"32dfe215-e325-4160-8b46-1f7a372605b3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{User-api-link}}/delete-user/d6e3d78a-9d75-4232-ba1e-4e865363147d",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"delete-user",
+								"d6e3d78a-9d75-4232-ba1e-4e865363147d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{User-api-link}}/get-all-users?pageNumber=&pageSize=10&sortBy=userName&sortDir=desc",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"get-all-users"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "userName"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{User-api-link}}/get-by-id/981d9d33-fd55-4521-82f7-fb0a1a286a7d",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"get-by-id",
+								"981d9d33-fd55-4521-82f7-fb0a1a286a7d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Serve user image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{User-api-link}}/serve-user-image/32dfe215-e325-4160-8b46-1f7a372605b3",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"serve-user-image",
+								"32dfe215-e325-4160-8b46-1f7a372605b3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{User-api-link}}/get-by-email/alice@wonderland.com",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"get-by-email",
+								"alice@wonderland.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{User-api-link}}/search-user/xyz",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"search-user",
+								"xyz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Image upload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userImage",
+									"type": "file",
+									"src": "/C:/Users/gites/Downloads/profile_image.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{User-api-link}}/upload-user-image/48a9ecd1-475c-4f29-857d-dee0e599064",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"upload-user-image",
+								"48a9ecd1-475c-4f29-857d-dee0e599064"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All Api endpoints for User Module of Electronic Store Project"
+		},
+		{
+			"name": "Product Module",
+			"item": [
+				{
+					"name": "Create product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"productName\": \"Wireless Noise-Canceling Headphones\",\r\n        \"productDescription\": \"Premium over-ear headphones with advanced noise-cancellation technology\",\r\n        \"productBrandName\": \"SoundMaster\",\r\n        \"productWarrantyPeriod\": 24,\r\n        \"productRating\": 4,\r\n        \"productPrice\": 299.99,\r\n        \"productDiscountedPrice\": 249.99,\r\n        \"productStockQuantity\": 50,\r\n        \"productLive\": true,\r\n        \"productOutOfStock\": false,\r\n        \"productAddedDate\": \"22/12/2023\",\r\n        \"productImage\": \"headphones.jpg\"\r\n        // \"sku\": \"AUDIO-NC-001\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Product-api-link}}/create-product",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"create-product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create product with Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"productName\": \"Basketball\",\r\n    \"productDescription\": \"Durable basketball for outdoor play.\",\r\n    \"productBrandName\": \"Spalding\",\r\n    \"productWarrantyPeriod\": null,\r\n    \"productRating\": 5,\r\n    \"productPrice\": 40.00,\r\n    \"productDiscountedPrice\": 30.00,\r\n    \"productStockQuantity\": 75,\r\n    \"isProductLive\": true,\r\n    \"isProductOutOfStock\": false,\r\n    \"productAddedDate\": \"10/12/2024\",\r\n    \"productImage\": \"basketball.jpg\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Product-api-link}}/create-product-with-category/9893d105-c93e-4757-9268-6733d1f5a81b",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"create-product-with-category",
+								"9893d105-c93e-4757-9268-6733d1f5a81b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upadte Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"productName\": \"[Gitesh]System\",\r\n        \"productDescription\": \"Comprehensive home security kit with cameras and sensors\",\r\n        \"productBrandName\": \"[upt]SecureHome\",\r\n        \"productWarrantyPeriod\": 36,\r\n        \"productRating\": 5,\r\n        \"productPrice\": 499.99,\r\n        \"productDiscountedPrice\": 399.99,\r\n        \"productStockQuantity\": 20,\r\n        \"productLive\": true,\r\n        \"productOutOfStock\": false,\r\n        \"productAddedDate\": \"2024-02-15T19:45:00\",\r\n        \"productImage\": \"security-system.jpg\",\r\n        \"sku\": \"SEC-HOME-001\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Product-api-link}}/update-product/cf5a390a-c74c-4926-8d0e-5ffaa70ab277",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"update-product",
+								"cf5a390a-c74c-4926-8d0e-5ffaa70ab277"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upadte Category of Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Product-api-link}}/update-product/d299efea-3123-4895-85dc-5ae7d27468ce/category/f02a8f2f-3b20-44e3-9d7b-5056a2299f4e",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"update-product",
+								"d299efea-3123-4895-85dc-5ae7d27468ce",
+								"category",
+								"f02a8f2f-3b20-44e3-9d7b-5056a2299f4e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/delete-product/7d6f274b-66ec-43f5-abfc-9796cc734b29",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"delete-product",
+								"7d6f274b-66ec-43f5-abfc-9796cc734b29"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/get-all-products?pageNumber=&pageSize=5&sortBy=productName&sortDir=desc",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"get-all-products"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "productName"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get products with category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/get-products-with-category/f02a8f2f-3b20-44e3-9d7b-5056a2299f4e?pageNumber=&pageSize=5&sortBy=productName&sortDir=desc",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"get-products-with-category",
+								"f02a8f2f-3b20-44e3-9d7b-5056a2299f4e"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "productName"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/get-by-id/598e704b-63b0-49d2-a261-a8fc60cc7c7c",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"get-by-id",
+								"598e704b-63b0-49d2-a261-a8fc60cc7c7c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get products by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/search-products-by-name/camer?pageNumber=&pageSize=5&sortBy=productName&sortDir=desc",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"search-products-by-name",
+								"camer"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "productName"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get products by Brand Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/search-products-by-brand/audi?pageNumber=&pageSize=5&sortBy=productName&sortDir=desc",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"search-products-by-brand",
+								"audi"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "productName"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get products by Rating and Brand Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/search-products-by-rating-brand/3/audi?ratingMoreLessFlag=more&pageNumber=0&pageSize=5&sortBy=productName&sortDir=desc",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"search-products-by-rating-brand",
+								"3",
+								"audi"
+							],
+							"query": [
+								{
+									"key": "ratingMoreLessFlag",
+									"value": "more"
+								},
+								{
+									"key": "pageNumber",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "productName"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Active products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/search-active-products?pageNumber=1&pageSize=5&sortBy=productName&sortDir=desc",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"search-active-products"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "productName"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Serve product Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Product-api-link}}/serve-product-image/7d6f274b-66ec-43f5-abfc-9796cc734b29",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"serve-product-image",
+								"7d6f274b-66ec-43f5-abfc-9796cc734b29"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Product Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "productImage",
+									"type": "file",
+									"src": "/C:/Users/gites/Downloads/design.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Product-api-link}}/upload-product-image/7d6f274b-66ec-43f5-abfc-9796cc734b29",
+							"host": [
+								"{{Product-api-link}}"
+							],
+							"path": [
+								"upload-product-image",
+								"7d6f274b-66ec-43f5-abfc-9796cc734b29"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All Api endpoints for User Module of Electronic Store Project"
+		},
+		{
+			"name": "Category-Module",
+			"item": [
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"categoryTitle\": \"Sports & Outdoors\",\r\n    \"categoryDescription\": \"Equipment for sports and outdoor activities.\",\r\n    \"categoryCoverImage\": \"sports_outdoors.jpg\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Category-api-link}}/create-category",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"create-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryTitle\": \"[upt]Clothes\",\r\n    \"categoryDescription\": \"[upt]For clothes items\",\r\n    \"categoryCoverImage\": \"clothes.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Category-api-link}}/update-category/937b7f6f-ae56-408b-9e29-62abc55c8173",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"update-category",
+								"937b7f6f-ae56-408b-9e29-62abc55c8173"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Category-api-link}}/delete-category/bf0f487e-0a9b-42ae-a785-580c203e0053",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"delete-category",
+								"bf0f487e-0a9b-42ae-a785-580c203e0053"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Category-api-link}}/get-all-categories?pageNumber=&pageSize=5&sortBy=categoryTitle&sortDir=",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"get-all-categories"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "categoryTitle"
+								},
+								{
+									"key": "sortDir",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get category by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Category-api-link}}/get-by-id/f852ad61-f723-4fb4-bf2b-0c1b80ad454f",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"get-by-id",
+								"f852ad61-f723-4fb4-bf2b-0c1b80ad454f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Serve Category Cover Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Category-api-link}}/serve-category-cover-image/937b7f6f-ae56-408b-9e29-62abc55c8173",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"serve-category-cover-image",
+								"937b7f6f-ae56-408b-9e29-62abc55c8173"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Category-api-link}}/search-category/othe",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"search-category",
+								"othe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Category Cover Image Upload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "categoryImage",
+									"type": "file",
+									"src": "/C:/Users/gites/Downloads/Gemini_Generated_Image_cnr19ncnr19ncnr1.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Category-api-link}}/upload-category-cover-image/bf0f487e-0a9b-42ae-a785-580c203e0053",
+							"host": [
+								"{{Category-api-link}}"
+							],
+							"path": [
+								"upload-category-cover-image",
+								"bf0f487e-0a9b-42ae-a785-580c203e0053"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All Api endpoints for User Module of Electronic Store Project"
+		},
+		{
+			"name": "Cart Module",
+			"item": [
+				{
+					"name": "Add Item in Cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\":\"fe9bfaf8-a99e-4bcd-94b9-8229c532d105\",\r\n    \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Cart-Api-link}}/add-item/71dbb112-3269-4a4a-a05a-6054908c6447",
+							"host": [
+								"{{Cart-Api-link}}"
+							],
+							"path": [
+								"add-item",
+								"71dbb112-3269-4a4a-a05a-6054908c6447"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Item from Cart",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Cart-Api-link}}/remove-item/32dfe215-e325-4160-8b46-1f7a372605b3/item/1",
+							"host": [
+								"{{Cart-Api-link}}"
+							],
+							"path": [
+								"remove-item",
+								"32dfe215-e325-4160-8b46-1f7a372605b3",
+								"item",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove all items from Cart",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Cart-Api-link}}/remove-all-items/32dfe215-e325-4160-8b46-1f7a372605b3",
+							"host": [
+								"{{Cart-Api-link}}"
+							],
+							"path": [
+								"remove-all-items",
+								"32dfe215-e325-4160-8b46-1f7a372605b3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Cart-Api-link}}/searchCartByUser/d6e3d78a-9d75-4232-ba1e-4e865363147d",
+							"host": [
+								"{{Cart-Api-link}}"
+							],
+							"path": [
+								"searchCartByUser",
+								"d6e3d78a-9d75-4232-ba1e-4e865363147d"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All Api endpoints for User Module of Electronic Store Project"
+		},
+		{
+			"name": "Order Module",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"shippingAddress\": {\r\n    \"street\": \"Hans Enclave\",\r\n    \"city\": \"Haryana\",\r\n    \"state\": \"Haryana\",\r\n    \"country\": \"India\",\r\n    \"zipcode\": \"400001\",\r\n    \"phoneNbr\": \"+91-9876543210\",\r\n    \"recipientName\": \"Rahul Sharma\"\r\n  },\r\n  \"billingAddress\": {\r\n    \"street\": \"123 Main Street\",\r\n    \"city\": \"Mumbai\",\r\n    \"state\": \"Maharashtra\",\r\n    \"country\": \"India\",\r\n    \"zipcode\": \"400001\",\r\n    \"phoneNbr\": \"+91-9876543210\",\r\n    \"recipientName\": \"Rahul Sharma\"\r\n  },\r\n  \"shippingMethod\": \"PRIME\",\r\n  \"paymentMethod\": \"CREDIT_CARD\",\r\n  \"orderNotes\": \"Ache se pohocha dena\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Order-Api-link}}/create-order/71dbb112-3269-4a4a-a05a-6054908c6447",
+							"host": [
+								"{{Order-Api-link}}"
+							],
+							"path": [
+								"create-order",
+								"71dbb112-3269-4a4a-a05a-6054908c6447"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Order-Api-link}}/get-all-orders?pageNumber=&pageSize=5&sortBy=orderNumber&sortDir=desc",
+							"host": [
+								"{{Order-Api-link}}"
+							],
+							"path": [
+								"get-all-orders"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "orderNumber"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all orders of User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Order-Api-link}}/get-user-orders/71dbb112-3269-4a4a-a05a-6054908c6447",
+							"host": [
+								"{{Order-Api-link}}"
+							],
+							"path": [
+								"get-user-orders",
+								"71dbb112-3269-4a4a-a05a-6054908c6447"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Order-Api-link}}/delete-order/71dbb112-3269-4a4a-a05a-6054908c6447/order/f1c3b6e1-c061-46b6-ae7b-c3ae5342bb55",
+							"host": [
+								"{{Order-Api-link}}"
+							],
+							"path": [
+								"delete-order",
+								"71dbb112-3269-4a4a-a05a-6054908c6447",
+								"order",
+								"f1c3b6e1-c061-46b6-ae7b-c3ae5342bb55"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by Order Number",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Order-Api-link}}/get-by-order-number/ORD-20241226-4F3EB",
+							"host": [
+								"{{Order-Api-link}}"
+							],
+							"path": [
+								"get-by-order-number",
+								"ORD-20241226-4F3EB"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order as User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\":\"d273843c-fefe-4348-8320-534b0136b832\",\r\n    \"shippingAddress\": {\r\n        \"street\": \"[updated]Hans Enclave\",\r\n        \"city\": \"Haryana\",\r\n        \"state\": \"[updated]Haryana\",\r\n        \"country\": \"India\",\r\n        \"zipcode\": \"400001\",\r\n        \"phoneNbr\": \"+91-9876543210\",\r\n        \"recipientName\": \"Rahul Sharma\"\r\n    },\r\n    \"paymentMethod\": \"UPI\",\r\n    \"orderNotes\": \"Update kiya hai\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Order-Api-link}}/update-order/32dfe215-e325-4160-8b46-1f7a372605b3/user",
+							"host": [
+								"{{Order-Api-link}}"
+							],
+							"path": [
+								"update-order",
+								"32dfe215-e325-4160-8b46-1f7a372605b3",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order as Admin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\":\"d273843c-fefe-4348-8320-534b0136b832\",\r\n    \"paymentStatus\": \"PAID\",\r\n    \"status\":\"PROCESSING\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Order-Api-link}}/update-order/32dfe215-e325-4160-8b46-1f7a372605b3/admin",
+							"host": [
+								"{{Order-Api-link}}"
+							],
+							"path": [
+								"update-order",
+								"32dfe215-e325-4160-8b46-1f7a372605b3",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All Api endpoints for User Module of Electronic Store Project"
+		}
+	]
+}
