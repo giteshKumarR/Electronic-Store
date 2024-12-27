@@ -5,7 +5,10 @@ import com.lcwd.electronic.store.ElectronicStore.dtos.ProductDto;
 import com.lcwd.electronic.store.ElectronicStore.payload.ApiResponseMessage;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.payload.orderpayload.OrderRequest;
+import com.lcwd.electronic.store.ElectronicStore.payload.orderpayload.UpdateOrderRequestAdmin;
+import com.lcwd.electronic.store.ElectronicStore.payload.orderpayload.UpdateOrderRequestUser;
 import com.lcwd.electronic.store.ElectronicStore.services.OrderService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ public class OrderController {
     @PostMapping("/create-order/{userId}")
     public ResponseEntity<OrderDto> createOrder(
             @PathVariable String userId,
-            @RequestBody OrderRequest orderRequest
+            @Valid @RequestBody OrderRequest orderRequest
             ) {
         return new ResponseEntity<>(orderService.createOrderFromCart(userId,orderRequest), HttpStatus.CREATED);
     }
@@ -61,6 +64,27 @@ public class OrderController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-    // Update API's
+    @GetMapping("/get-by-order-number/{orderNumber}")
+    public ResponseEntity<OrderDto> getOrderByOrderNumber(@PathVariable String orderNumber) {
+        return new ResponseEntity<>(orderService.searchByOrderNumber(orderNumber), HttpStatus.OK);
+    }
 
+    // Update API's
+    // Normal User
+    @PutMapping("/update-order/{userId}/user")
+    public ResponseEntity<OrderDto> updateOrderUser(
+            @PathVariable String userId,
+            @Valid @RequestBody UpdateOrderRequestUser updateOrderRequestUser
+            ) {
+        return new ResponseEntity<>(orderService.updateOrderUser(userId, updateOrderRequestUser), HttpStatus.OK);
+    }
+
+    // Admin
+    @PutMapping("/update-order/{userId}/admin")
+    public ResponseEntity<OrderDto> updateOrderAdmin(
+            @PathVariable String userId,
+            @Valid @RequestBody UpdateOrderRequestAdmin updateOrderRequestAdmin
+            ) {
+        return new ResponseEntity<>(orderService.updateOrderAdmin(userId, updateOrderRequestAdmin), HttpStatus.OK);
+    }
 }

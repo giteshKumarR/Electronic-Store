@@ -160,7 +160,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto updateOrderUser(String userId, UpdateOrderRequestUser updateOrderRequestUser) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given Id not found !!"));
+        List<Order> userOrders = orderRepository.findByUser(user);
+        for (Order order: userOrders) {
+            if(order.getOrderId().equalsIgnoreCase(updateOrderRequestUser.getOrderId())) {
+                // Means we found the order and we are good to update it
+                order.setShippingAddress(updateOrderRequestUser.getShippingAddress());
+                order.setPaymentMethod(updateOrderRequestUser.getPaymentMethod());
+                order.setOrderNotes(updateOrderRequestUser.getOrderNotes());
+
+                Order updatedOrder = orderRepository.save(order);
+                return mapper.map(updatedOrder, OrderDto.class);
+            }
+        }
+        throw new ResourseNotFoundException("Order With given order Id not found");
     }
 
     @Override
@@ -170,7 +183,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto updateOrderAdmin(String userId, UpdateOrderRequestAdmin updateOrderRequestAdmin) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given Id not found !!"));
+        List<Order> userOrders = orderRepository.findByUser(user);
+        for (Order order: userOrders) {
+            if(order.getOrderId().equalsIgnoreCase(updateOrderRequestAdmin.getOrderId())) {
+                // Means we found the order and we are good to update it
+                order.setPaymentStatus(updateOrderRequestAdmin.getPaymentStatus());
+                order.setStatus(updateOrderRequestAdmin.getStatus());
+
+                Order updatedOrder = orderRepository.save(order);
+                return mapper.map(updatedOrder, OrderDto.class);
+            }
+        }
+        throw new ResourseNotFoundException("Order With given order Id not found");
     }
 
     // Helper Functions
