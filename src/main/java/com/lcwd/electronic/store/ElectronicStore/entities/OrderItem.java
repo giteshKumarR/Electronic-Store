@@ -26,8 +26,8 @@ public class OrderItem {
     // Here in the mapping notice that we didn't do any mapped by
     // as we want ki mappings yahi se manage ho jaye, ie, product items table se he
     // ek product id column ban jayga that will represent the product..
-    @OneToOne(fetch = FetchType.EAGER) // jab Order item get kare to product bhi get ho jaye
-    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.EAGER) // jab Order item get kare to product bhi get ho jaye
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @ManyToOne

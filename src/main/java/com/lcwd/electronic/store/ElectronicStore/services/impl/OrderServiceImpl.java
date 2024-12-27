@@ -6,8 +6,10 @@ import com.lcwd.electronic.store.ElectronicStore.enums.OrderStatus;
 import com.lcwd.electronic.store.ElectronicStore.enums.PaymentMethod;
 import com.lcwd.electronic.store.ElectronicStore.enums.PaymentStatus;
 import com.lcwd.electronic.store.ElectronicStore.enums.ShippingMethod;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.BadApiRequestException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.EmptyCartException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.orderexceptions.NoOrderException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.payload.orderpayload.OrderRequest;
@@ -54,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException(("User with given Id not found !!")));
 
         // 2. Check if the cart is present or not for the user.
-        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart for the given user not found!!"));
+        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new ResourseNotFoundException("Cart for the given user not found!!"));
 
         // 3. Validate the cart Items
         validateCartItems(cart);
@@ -80,7 +82,8 @@ public class OrderServiceImpl implements OrderService {
         Double tax = subtotal*0.18;
         order.setTax(tax);
 
-        Double shipCost = subtotal*0.5;
+        // Shipping Cost is 5%
+        Double shipCost = subtotal*0.05;
         order.setShippingCost(shipCost);
 
         order.setTotalAmountAfterTax(subtotal + tax + shipCost);
@@ -133,7 +136,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getAllOrdersOfUser(String userId) {
-        List<Order> userOrders = orderRepository.findByUser_UserId(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given ID not found !!"));
+        List<Order> userOrders = orderRepository.findByUser(user);
+        if(userOrders.isEmpty()) {
+            throw new NoOrderException("Currently User has no Orders !!");
+        }
         return userOrders.stream()
                 .map(order -> mapper.map(order, OrderDto.class))
                 .toList();
@@ -143,12 +150,30 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(String userId, String orderId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given Id not found !!"));
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourseNotFoundException("Order with given Id not found !!"));
-        orderRepository.delete(order);
+        if(order.getUser().getUserId().equalsIgnoreCase(user.getUserId())) {
+            orderRepository.delete(order);
+        } else {
+            logger.info("User ID passed and user Id associated with the order didn't Match!!! ");
+            throw new BadApiRequestException("Some issue occurred while Deleting the order !!");
+        }
     }
 
     @Override
     public OrderDto updateOrderUser(String userId, UpdateOrderRequestUser updateOrderRequestUser) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given Id not found !!"));
+        List<Order> userOrders = orderRepository.findByUser(user);
+        for (Order order: userOrders) {
+            if(order.getOrderId().equalsIgnoreCase(updateOrderRequestUser.getOrderId())) {
+                // Means we found the order and we are good to update it
+                order.setShippingAddress(updateOrderRequestUser.getShippingAddress());
+                order.setPaymentMethod(updateOrderRequestUser.getPaymentMethod());
+                order.setOrderNotes(updateOrderRequestUser.getOrderNotes());
+
+                Order updatedOrder = orderRepository.save(order);
+                return mapper.map(updatedOrder, OrderDto.class);
+            }
+        }
+        throw new ResourseNotFoundException("Order With given order Id not found");
     }
 
     @Override
@@ -158,7 +183,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto updateOrderAdmin(String userId, UpdateOrderRequestAdmin updateOrderRequestAdmin) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given Id not found !!"));
+        List<Order> userOrders = orderRepository.findByUser(user);
+        for (Order order: userOrders) {
+            if(order.getOrderId().equalsIgnoreCase(updateOrderRequestAdmin.getOrderId())) {
+                // Means we found the order and we are good to update it
+                order.setPaymentStatus(updateOrderRequestAdmin.getPaymentStatus());
+                order.setStatus(updateOrderRequestAdmin.getStatus());
+
+                Order updatedOrder = orderRepository.save(order);
+                return mapper.map(updatedOrder, OrderDto.class);
+            }
+        }
+        throw new ResourseNotFoundException("Order With given order Id not found");
     }
 
     // Helper Functions

@@ -1,4 +1,4 @@
-package com.lcwd.electronic.store.ElectronicStore.exceptions;
+package com.lcwd.electronic.store.ElectronicStore.exceptions.general;
 
 public class CannotChangeEmailException extends RuntimeException {
     public CannotChangeEmailException() {

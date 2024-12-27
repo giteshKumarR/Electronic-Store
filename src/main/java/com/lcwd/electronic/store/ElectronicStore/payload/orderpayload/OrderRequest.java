@@ -2,6 +2,7 @@ package com.lcwd.electronic.store.ElectronicStore.payload.orderpayload;
 
 import com.lcwd.electronic.store.ElectronicStore.entities.Address;
 import com.lcwd.electronic.store.ElectronicStore.enums.ShippingMethod;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter

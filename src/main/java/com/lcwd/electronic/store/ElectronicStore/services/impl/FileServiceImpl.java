@@ -1,6 +1,6 @@
 package com.lcwd.electronic.store.ElectronicStore.services.impl;
 
-import com.lcwd.electronic.store.ElectronicStore.exceptions.BadApiRequestException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.BadApiRequestException;
 import com.lcwd.electronic.store.ElectronicStore.services.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

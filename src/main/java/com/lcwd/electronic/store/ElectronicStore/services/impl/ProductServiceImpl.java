@@ -1,10 +1,9 @@
 package com.lcwd.electronic.store.ElectronicStore.services.impl;
 
-import com.lcwd.electronic.store.ElectronicStore.dtos.CategoryDto;
 import com.lcwd.electronic.store.ElectronicStore.dtos.ProductDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.Category;
 import com.lcwd.electronic.store.ElectronicStore.entities.Product;
-import com.lcwd.electronic.store.ElectronicStore.exceptions.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.repositories.CategoryRepository;

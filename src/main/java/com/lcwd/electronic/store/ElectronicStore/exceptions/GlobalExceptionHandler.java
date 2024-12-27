@@ -2,6 +2,11 @@ package com.lcwd.electronic.store.ElectronicStore.exceptions;
 
 import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.EmptyCartException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.MoreQuantityThanStockException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.cartexceptions.ZeroQuantityException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.BadApiRequestException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.CannotChangeEmailException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.orderexceptions.NoOrderException;
 import com.lcwd.electronic.store.ElectronicStore.payload.ApiResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +97,17 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(ZeroQuantityException.class)
     public ResponseEntity<ApiResponseMessage> zeroQuantityExceptionHandler(ZeroQuantityException ex) {
+        ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .build();
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    // No orders for a user Exception handler
+    @ExceptionHandler(NoOrderException.class)
+    public ResponseEntity<ApiResponseMessage> noOrderExceptionHandler(NoOrderException ex) {
         ApiResponseMessage exceptionResponse = ApiResponseMessage.builder()
                 .message(ex.getMessage())
                 .status(HttpStatus.BAD_REQUEST)
