@@ -1,11 +1,13 @@
 package com.lcwd.electronic.store.ElectronicStore.services.impl;
 
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
+import com.lcwd.electronic.store.ElectronicStore.entities.Role;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.general.CannotChangeEmailException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
+import com.lcwd.electronic.store.ElectronicStore.repositories.RoleRepository;
 import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,9 +37,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Value("${user.profile.image.path}")
     private String imagePath;
@@ -48,6 +56,19 @@ public class UserServiceImpl implements UserService {
         userDto.setUserId(uniqueUserID);
 
         User user = dtoToEntity(userDto);
+        // Encode the password before saving
+        user.setUserPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Assign role to the user
+        // Get the normal role form roleRepository
+        Role role = new Role();
+        role.setRoleId(UUID.randomUUID().toString());
+        role.setName("ROLE_NORMAL");
+
+        // Means ki agar DB mei Normal role nahi mila to hum jo humne upar create kara hai
+        // vo role assign kar denge...
+        Role roleNormal = roleRepository.findByName("ROLE_NORMAL").orElse(role);
+        user.setRoles(List.of(roleNormal));
         User savedUser = userRepository.save(user);
 
         return entityToDto(savedUser);
@@ -57,13 +78,15 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userWithUpdatedDetails, String userId) {
         // Ub yaha request me DTO aayga to hum dto se entity banayenge to save the new details
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User not found with given userId"));
-        user.setUserName(userWithUpdatedDetails.getUserName());
+        user.setName(userWithUpdatedDetails.getName());
         // Email we are not going to set again
         if(!userWithUpdatedDetails.getUserEmail().equals(user.getUserEmail())) {
             throw new CannotChangeEmailException("Cannot Update Email");
         }
 
-        user.setUserPassword(userWithUpdatedDetails.getUserPassword());
+        user.setUserPassword(passwordEncoder.encode(userWithUpdatedDetails.getUserPassword()));
+        // TODO: 1/2/2025
+//        user.setRoles(userWithUpdatedDetails.getRoles().stream().map(roleDto -> mapper.map(roleDto, Role.class)).collect(Collectors.toList()));
         user.setUserGender(userWithUpdatedDetails.getUserGender());
         user.setUserStatus(userWithUpdatedDetails.getUserStatus());
         user.setUserAbout(userWithUpdatedDetails.getUserAbout());
@@ -156,7 +179,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> searchUser(String keyword) {
-        List<User> allUserEntities = userRepository.findByUserNameContaining(keyword);
+        List<User> allUserEntities = userRepository.findByNameContaining(keyword);
         List<UserDto> allUsersDtoList = allUserEntities.stream().map(this::entityToDto).collect(Collectors.toList());
         return allUsersDtoList;
     }

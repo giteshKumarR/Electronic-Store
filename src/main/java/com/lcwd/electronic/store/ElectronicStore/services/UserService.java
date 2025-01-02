@@ -33,6 +33,6 @@ public interface UserService {
 
     // Search User by name containing some characters
     List<UserDto> searchUser(String keyword);
-
+    
     // Other User Specific Service Methods
 }

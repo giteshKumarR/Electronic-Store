@@ -1,11 +1,14 @@
 package com.lcwd.electronic.store.ElectronicStore.dtos;
 
+import com.lcwd.electronic.store.ElectronicStore.entities.Role;
 import com.lcwd.electronic.store.ElectronicStore.validate.ImageNameValid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,7 +23,7 @@ public class UserDto {
     private String UserStatus;
 
     @Size(min = 5, max=25, message="Invalid Name !!")
-    private String userName;
+    private String name;
 
 //    @Email(message = "Invalid User Email !!")
     @Pattern(regexp = "^[a-z0-9][-a-z0-9._]+@([-a-z0-9]+\\.)+[a-z]{2,5}",
@@ -36,6 +39,8 @@ public class UserDto {
 
     @NotBlank(message = "Write Something about yourself !!")
     private String userAbout;
+
+    private List<RoleDto> roles;
 
     @ImageNameValid
     private String userProfileImage;
