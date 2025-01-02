@@ -50,6 +50,14 @@ public class UserController {
         return new ResponseEntity<>(userService.updateUser(userWithUpdatedDetails, userId), HttpStatus.OK);
 
     }
+
+    // Update role of user to ADMIN
+    @PutMapping("/update-role-to-admin/{userId}")
+    public ResponseEntity<UserDto> updateRoletoAdmin(@PathVariable String userId) {
+        return new ResponseEntity<>(userService.updateRoleToAdmin(userId), HttpStatus.OK);
+    }
+
+
     //delete
     @DeleteMapping("/delete-user/{userId}")
     public ResponseEntity<ApiResponseMessage> deleteUser(@PathVariable String userId) throws IOException {

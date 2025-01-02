@@ -25,7 +25,7 @@ public class SecurityConfig {
                 // Anyone can create a User (PUBLIC)
                 .requestMatchers(HttpMethod.POST,"/v1/user-api/create-user").permitAll()
                 .requestMatchers(HttpMethod.GET, "/v1/user-api/get-by-id/**").hasAnyRole("ADMIN","NORMAL")
-//                .requestMatchers("/v1/user-api/get-all-users/**").permitAll() // test
+                .requestMatchers("/v1/user-api/get-all-users/**").permitAll() // test
                 .requestMatchers("/v1/user-api/**").hasRole("ADMIN")
 
 

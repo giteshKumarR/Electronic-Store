@@ -33,6 +33,9 @@ public interface UserService {
 
     // Search User by name containing some characters
     List<UserDto> searchUser(String keyword);
-    
+
+    // Update role of normal user to Admin (This can be used by ADMIN only)
+    UserDto updateRoleToAdmin(String userId);
+
     // Other User Specific Service Methods
 }

@@ -3,6 +3,7 @@ package com.lcwd.electronic.store.ElectronicStore.services.impl;
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.entities.Role;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
+import com.lcwd.electronic.store.ElectronicStore.exceptions.general.BadApiRequestException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.general.CannotChangeEmailException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
@@ -27,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -182,6 +184,22 @@ public class UserServiceImpl implements UserService {
         List<User> allUserEntities = userRepository.findByNameContaining(keyword);
         List<UserDto> allUsersDtoList = allUserEntities.stream().map(this::entityToDto).collect(Collectors.toList());
         return allUsersDtoList;
+    }
+
+    @Override
+    public UserDto updateRoleToAdmin(String userId) {
+        User userToBeUpdated = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("user with given Id not found !!"));
+        String userRoleName = userToBeUpdated.getRoles().get(0).getName();
+        // Means to change role user's role should be Normal and the user should not be inactive
+        if(!userToBeUpdated.getUserStatus().equalsIgnoreCase("inactive") && userRoleName.equals("ROLE_NORMAL")) {
+            // Make the roles list empty and then assign the new ADMIN role
+            Role roleAdmin = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new ResourseNotFoundException("Given role not found!!"));
+            userToBeUpdated.getRoles().clear();
+            userToBeUpdated.getRoles().add(roleAdmin);
+        }
+        // Save the updated user
+        User savedUser = userRepository.save(userToBeUpdated);
+        return mapper.map(savedUser, UserDto.class);
     }
 
 
