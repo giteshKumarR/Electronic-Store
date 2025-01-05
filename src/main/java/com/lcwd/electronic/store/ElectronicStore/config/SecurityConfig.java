@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,6 +36,10 @@ public class SecurityConfig {
         security.authorizeHttpRequests( request -> request
 
                 // User Management APIs
+
+                // JWT endpoint
+                .requestMatchers(HttpMethod.POST, "/v1/auth-api/generate-token").permitAll()
+
                 // Anyone can create a User (PUBLIC)
                 .requestMatchers(HttpMethod.POST,"/v1/user-api/create-user").permitAll()
                 .requestMatchers(HttpMethod.GET, "/v1/user-api/get-by-id/**").hasAnyRole("ADMIN","NORMAL")
@@ -86,5 +93,13 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+
+    // We made a BEAN for getting the Authentication manager at runtime..
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
+        return builder.getAuthenticationManager();
     }
 }

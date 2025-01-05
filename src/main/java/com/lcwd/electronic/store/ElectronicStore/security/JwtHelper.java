@@ -25,7 +25,7 @@ public class JwtHelper {
     //     and the time for which the JWT Token will be valid...
 
     // Validity time in Milliseconds..
-    public static final long TOKEN_VALIDITY_TIME = 5*60*60*1000;
+    public static final long TOKEN_VALIDITY_TIME = 5*60*60*1000; // 5 hours
 
     // Secret Key;
     public static final String SECRET_KEY = generateSecretKey();
