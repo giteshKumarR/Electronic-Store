@@ -1,18 +1,29 @@
 package com.lcwd.electronic.store.ElectronicStore.config;
 
+import com.lcwd.electronic.store.ElectronicStore.security.JwtAuthenticationEntryPoint;
+import com.lcwd.electronic.store.ElectronicStore.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity(debug = true) // debug = true for Dev purposes only.
 public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private JwtAuthenticationEntryPoint entryPoint;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
         // Configure the urls
@@ -51,7 +62,24 @@ public class SecurityConfig {
         );
 
         // Type of the security used
-        security.httpBasic(Customizer.withDefaults());
+        // security.httpBasic(Customizer.withDefaults());
+
+        // CONFIGURING JWT
+        // ========================
+
+        // Configuring the entry point when Exception is occurred..
+        security.exceptionHandling(ex -> ex.authenticationEntryPoint(entryPoint));
+
+
+        // We will go the session as STATELESS policy so that our JWT logic works Stateless
+        security.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+
+        // We will now configure the Filter...
+        // Means ki hamara filter jo humne banaya for JWT vo UsernamePasswordAuthFilter k
+        // execute hone se pehele he execute ho jayga..
+        security.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return security.build();
     }
 
