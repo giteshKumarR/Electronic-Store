@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
+// We have to do this on every controller to allow CORS....
+//@CrossOrigin(origins = "http://localhost:5173") // Note: Vite uses port 5173 by default
 @RequestMapping("v1/user-api")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
