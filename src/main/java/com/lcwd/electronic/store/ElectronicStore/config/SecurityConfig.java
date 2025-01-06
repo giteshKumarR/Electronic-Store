@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.ElectronicStore.config;
 
+import com.lcwd.electronic.store.ElectronicStore.helper.AppConstants;
 import com.lcwd.electronic.store.ElectronicStore.security.JwtAuthenticationEntryPoint;
 import com.lcwd.electronic.store.ElectronicStore.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,27 +43,27 @@ public class SecurityConfig {
 
                 // Anyone can create a User (PUBLIC)
                 .requestMatchers(HttpMethod.POST,"/v1/user-api/create-user").permitAll()
-                .requestMatchers(HttpMethod.GET, "/v1/user-api/get-by-id/**").hasAnyRole("ADMIN","NORMAL")
+                .requestMatchers(HttpMethod.GET, "/v1/user-api/get-by-id/**").hasAnyRole(AppConstants.ROLE_ADMIN,AppConstants.ROLE_NORMAL)
                 .requestMatchers("/v1/user-api/get-all-users/**").permitAll() // test
-                .requestMatchers("/v1/user-api/**").hasRole("ADMIN")
+                .requestMatchers("/v1/user-api/**").hasRole(AppConstants.ROLE_ADMIN)
 
 
                 // Product APIs
                 .requestMatchers(HttpMethod.GET, "/v1/product-api/**").permitAll() // Kind of PUBLIC API
-                .requestMatchers("/v1/product-api/**").hasRole("ADMIN")
+                .requestMatchers("/v1/product-api/**").hasRole(AppConstants.ROLE_ADMIN)
 
                 // Category APIs
                 .requestMatchers(HttpMethod.GET, "/v1/category-api/**").permitAll()
-                .requestMatchers("/v1/category-api/**").hasRole("ADMIN")
+                .requestMatchers("/v1/category-api/**").hasRole(AppConstants.ROLE_ADMIN)
 
                 // Cart APIs
                 .requestMatchers("/v1/cart-api/**").hasRole("NORMAL")
 
                 // Order APIs
-                .requestMatchers("/v1/order-api/create-order/**").hasRole("NORMAL")
-                .requestMatchers("/v1/order-api/get-user-orders/**").hasRole("NORMAL")
-                .requestMatchers(HttpMethod.PUT, "/v1/order-api/update-order/*/user").hasAnyRole("NORMAL","ADMIN")
-                .requestMatchers("/v1/order-api/**").hasRole("ADMIN")
+                .requestMatchers("/v1/order-api/create-order/**").hasRole(AppConstants.ROLE_NORMAL)
+                .requestMatchers("/v1/order-api/get-user-orders/**").hasRole(AppConstants.ROLE_NORMAL)
+                .requestMatchers(HttpMethod.PUT, "/v1/order-api/update-order/*/user").hasAnyRole(AppConstants.ROLE_NORMAL,AppConstants.ROLE_ADMIN)
+                .requestMatchers("/v1/order-api/**").hasRole(AppConstants.ROLE_ADMIN)
 
                 // Any other request
                 .anyRequest().authenticated()

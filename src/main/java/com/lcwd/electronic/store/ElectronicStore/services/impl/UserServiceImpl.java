@@ -6,6 +6,7 @@ import com.lcwd.electronic.store.ElectronicStore.entities.User;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.general.BadApiRequestException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.general.CannotChangeEmailException;
 import com.lcwd.electronic.store.ElectronicStore.exceptions.general.ResourseNotFoundException;
+import com.lcwd.electronic.store.ElectronicStore.helper.AppConstants;
 import com.lcwd.electronic.store.ElectronicStore.helper.Helper;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
 import com.lcwd.electronic.store.ElectronicStore.repositories.RoleRepository;
@@ -65,11 +66,11 @@ public class UserServiceImpl implements UserService {
         // Get the normal role form roleRepository
         Role role = new Role();
         role.setRoleId(UUID.randomUUID().toString());
-        role.setName("ROLE_NORMAL");
+        role.setName("ROLE_"+ AppConstants.ROLE_NORMAL);
 
         // Means ki agar DB mei Normal role nahi mila to hum jo humne upar create kara hai
         // vo role assign kar denge...
-        Role roleNormal = roleRepository.findByName("ROLE_NORMAL").orElse(role);
+        Role roleNormal = roleRepository.findByName("ROLE_"+AppConstants.ROLE_NORMAL).orElse(role);
         user.setRoles(List.of(roleNormal));
         User savedUser = userRepository.save(user);
 
@@ -193,7 +194,7 @@ public class UserServiceImpl implements UserService {
         // Means to change role user's role should be Normal and the user should not be inactive
         if(!userToBeUpdated.getUserStatus().equalsIgnoreCase("inactive") && userRoleName.equals("ROLE_NORMAL")) {
             // Make the roles list empty and then assign the new ADMIN role
-            Role roleAdmin = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new ResourseNotFoundException("Given role not found!!"));
+            Role roleAdmin = roleRepository.findByName("ROLE_"+AppConstants.ROLE_ADMIN).orElseThrow(() -> new ResourseNotFoundException("Given role not found!!"));
             userToBeUpdated.getRoles().clear();
             userToBeUpdated.getRoles().add(roleAdmin);
         }

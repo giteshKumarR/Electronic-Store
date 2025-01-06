@@ -2,6 +2,7 @@ package com.lcwd.electronic.store.ElectronicStore;
 
 import com.lcwd.electronic.store.ElectronicStore.entities.Role;
 import com.lcwd.electronic.store.ElectronicStore.entities.User;
+import com.lcwd.electronic.store.ElectronicStore.helper.AppConstants;
 import com.lcwd.electronic.store.ElectronicStore.repositories.RoleRepository;
 import com.lcwd.electronic.store.ElectronicStore.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ElectronicStoreApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Role roleAdmin = roleRepository.findByName("ROLE_ADMIN").orElse(null);
+		Role roleAdmin = roleRepository.findByName("ROLE_"+ AppConstants.ROLE_ADMIN).orElse(null);
 //		if(roleAdmin == null) {
 //			roleAdmin = new Role();
 //			roleAdmin.setRoleId(UUID.randomUUID().toString());
@@ -36,7 +37,7 @@ public class ElectronicStoreApplication implements CommandLineRunner {
 //			roleRepository.save(roleAdmin);
 //		}
 //
-		Role roleNormal = roleRepository.findByName("ROLE_NORMAL").orElse(null);
+		Role roleNormal = roleRepository.findByName("ROLE_"+AppConstants.ROLE_NORMAL).orElse(null);
 //		if(roleNormal == null) {
 //			roleNormal = new Role();
 //			roleNormal.setRoleId(UUID.randomUUID().toString());
