@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
+// We have to do this on every controller to allow CORS....
+//@CrossOrigin(origins = "http://localhost:5173") // Note: Vite uses port 5173 by default
 @RequestMapping("v1/user-api")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -50,6 +52,14 @@ public class UserController {
         return new ResponseEntity<>(userService.updateUser(userWithUpdatedDetails, userId), HttpStatus.OK);
 
     }
+
+    // Update role of user to ADMIN
+    @PutMapping("/update-role-to-admin/{userId}")
+    public ResponseEntity<UserDto> updateRoletoAdmin(@PathVariable String userId) {
+        return new ResponseEntity<>(userService.updateRoleToAdmin(userId), HttpStatus.OK);
+    }
+
+
     //delete
     @DeleteMapping("/delete-user/{userId}")
     public ResponseEntity<ApiResponseMessage> deleteUser(@PathVariable String userId) throws IOException {
