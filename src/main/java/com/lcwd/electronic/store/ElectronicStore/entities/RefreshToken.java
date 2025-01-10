@@ -20,7 +20,8 @@ public class RefreshToken {
     private Instant expiryDate;
 
     // We are doing single direction mapping from Refresh Token side
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private User user;
 
     // these two fields fare for tracking purposes

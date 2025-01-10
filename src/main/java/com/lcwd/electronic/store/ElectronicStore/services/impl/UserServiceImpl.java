@@ -143,11 +143,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given userId not found!!"));
+        User userToBeDeleted = userRepository.findById(userId).orElseThrow(() -> new ResourseNotFoundException("User with given userId not found!!"));
 
         // Delete user image from the images folder
         // 1. We get the full path to delete the image
-        String fullPath = imagePath + user.getUserProfileImage();
+        String fullPath = imagePath + userToBeDeleted.getUserProfileImage();
         // 2. We need to create a path then pass that path to Delete function in Files to delete the file.
 
         try {
@@ -165,7 +165,10 @@ public class UserServiceImpl implements UserService {
 //        userRepository.save(user);
 
         //Hard Delete
-        userRepository.delete(user);
+        userToBeDeleted.getRoles().clear();
+        User savedUserWithNoroles = userRepository.save(userToBeDeleted);// saving the user with no role
+
+        userRepository.delete(savedUserWithNoroles);
     }
 
     @Override

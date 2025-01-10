@@ -59,6 +59,12 @@ public class User implements UserDetails {
     )
     private List<Order> orderList;
 
+    @OneToOne(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE
+    )
+    private RefreshToken refreshToken;
+
     @Column(name = "user_created_on")
     private LocalDateTime createdOn;
 
