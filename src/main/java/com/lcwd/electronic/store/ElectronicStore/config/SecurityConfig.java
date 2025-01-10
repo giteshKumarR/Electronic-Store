@@ -85,6 +85,7 @@ public class SecurityConfig {
 
                 // JWT endpoint
                 .requestMatchers(HttpMethod.POST, "/v1/auth-api/generate-token").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/auth-api/regenerate-token").permitAll()
 
                 // Anyone can create a User (PUBLIC)
                 .requestMatchers(HttpMethod.POST,"/v1/user-api/create-user").permitAll()
