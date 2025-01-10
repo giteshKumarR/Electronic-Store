@@ -7,6 +7,63 @@
 	},
 	"item": [
 		{
+			"name": "Authentication (JWT)",
+			"item": [
+				{
+					"name": "Generate the Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"devansh@gmail.com\",\r\n    \"password\":\"devanshh@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Auth-Api-link}}/generate-token",
+							"host": [
+								"{{Auth-Api-link}}"
+							],
+							"path": [
+								"generate-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Regenerate JWT token using Refresh token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\":\"1ff9332d-5d23-4d75-a6db-1cf6a3563e00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Auth-Api-link}}/regenerate-token",
+							"host": [
+								"{{Auth-Api-link}}"
+							],
+							"path": [
+								"regenerate-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "User-Module",
 			"item": [
 				{
@@ -16,7 +73,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "  {\r\n    \"userStatus\": \"Inactive\",\r\n    \"userName\": \"Bob The Builder\",\r\n    \"userEmail\": \"bob@builder.com\",\r\n    \"userPassword\": \"bobthebuilder\",\r\n    \"userGender\": \"M\",\r\n    \"userAbout\": \"Can we fix it? Yes we can!\",\r\n    \"userProfileImage\": \"bob.png\"\r\n  }",
+							"raw": "  {\r\n    \"userStatus\": \"Active\",\r\n    \"name\": \"Suraj\",\r\n    \"userEmail\": \"suraj@gmail.com\",\r\n    \"userPassword\": \"suraj@123\",\r\n    \"userGender\": \"M\",\r\n    \"userAbout\": \"Suraj is Sun\",\r\n    \"userProfileImage\": \"suraj_profile.png\"\r\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -37,6 +94,43 @@
 				},
 				{
 					"name": "Upadte user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcmFuamFsQGdtYWlsLmNvbSIsImlhdCI6MTczNjE1Njc3NCwiZXhwIjoxNzM2MTc0Nzc0fQ.31yzEdfKPbok8unxHg-02ZMdWczXgsVoA6Mhqyd8s-juXKUnuMSRMbDC_CrfjTaX2ECz22clOt5GHU9tTLRZ5A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"[Upt]sarah Thompson\",\r\n    \"userEmail\": \"suraj@gmail.com\",\r\n    \"userPassword\": \"sarah@123\",\r\n    \"userGender\": \"F\",\r\n    \"userAbout\": \"Travel blogger exploring hidden gems around the world\",\r\n    \"userProfileImage\": \"741792cf-b501-48eb-bde8-060d0bef1f13.jpg\",\r\n    \"userStatus\": \"Active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{User-api-link}}/update-user/39bd16df-8c3c-4bc6-94d3-debfe30bf14a",
+							"host": [
+								"{{User-api-link}}"
+							],
+							"path": [
+								"update-user",
+								"39bd16df-8c3c-4bc6-94d3-debfe30bf14a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Role of Normal User",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -86,7 +180,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{User-api-link}}/get-all-users?pageNumber=&pageSize=10&sortBy=userName&sortDir=desc",
+							"raw": "{{User-api-link}}/get-all-users?pageNumber=&pageSize=10&sortBy=name&sortDir=desc",
 							"host": [
 								"{{User-api-link}}"
 							],
@@ -104,7 +198,7 @@
 								},
 								{
 									"key": "sortBy",
-									"value": "userName"
+									"value": "name"
 								},
 								{
 									"key": "sortDir",
@@ -1156,6 +1250,14 @@
 				}
 			],
 			"description": "All Api endpoints for User Module of Electronic Store Project"
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
 		}
 	]
 }
