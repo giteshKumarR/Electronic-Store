@@ -45,7 +45,7 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getAllOrders(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
-    // Get all orders of a User
+    // Get all orders of a User (We have implemented this functionality in User Module)
     @GetMapping("/get-user-orders/{userId}")
     public ResponseEntity<List<OrderDto>> getUserOrders(@PathVariable String userId) {
         return new ResponseEntity<>(orderService.getAllOrdersOfUser(userId), HttpStatus.OK);

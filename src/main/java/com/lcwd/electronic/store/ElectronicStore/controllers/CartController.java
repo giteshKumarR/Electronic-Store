@@ -44,7 +44,7 @@ public class CartController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-    // Search Cart by User
+    // Search Cart by User (We have implemented this functionality in User Module)
     @GetMapping("/searchCartByUser/{userId}")
     public ResponseEntity<CartDto> searchUserCart(@PathVariable String userId) {
         return new ResponseEntity<>(cartService.searchCartByUser(userId), HttpStatus.FOUND);

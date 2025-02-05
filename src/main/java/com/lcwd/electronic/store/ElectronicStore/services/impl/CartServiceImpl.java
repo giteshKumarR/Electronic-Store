@@ -164,7 +164,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto searchCartByUser(String userId) {
-        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart not fund with given UserId"));
+        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new ResourseNotFoundException("Cart not found with given UserId"));
         return Helper.mapCartEntityToCartDto(cart);
     }
 

@@ -1,10 +1,14 @@
 package com.lcwd.electronic.store.ElectronicStore.controllers;
 
+import com.lcwd.electronic.store.ElectronicStore.dtos.CartDto;
+import com.lcwd.electronic.store.ElectronicStore.dtos.OrderDto;
 import com.lcwd.electronic.store.ElectronicStore.dtos.UserDto;
 import com.lcwd.electronic.store.ElectronicStore.payload.ApiResponseMessage;
 import com.lcwd.electronic.store.ElectronicStore.payload.ImageResponse;
 import com.lcwd.electronic.store.ElectronicStore.payload.PagableResponse;
+import com.lcwd.electronic.store.ElectronicStore.services.CartService;
 import com.lcwd.electronic.store.ElectronicStore.services.FileService;
+import com.lcwd.electronic.store.ElectronicStore.services.OrderService;
 import com.lcwd.electronic.store.ElectronicStore.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -30,14 +34,24 @@ import java.util.List;
 @RequestMapping("v1/user-api")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private FileService fileService;
+    private final FileService fileService;
+
+    private final CartService cartService;
+
+    private final OrderService orderService;
 
     @Value("${user.profile.image.path}")
     private String imageUploadPath;
+
+    @Autowired
+    public UserController(UserService userService, FileService fileService, CartService cartService, OrderService orderService) {
+        this.userService = userService;
+        this.fileService = fileService;
+        this.cartService = cartService;
+        this.orderService = orderService;
+    }
 
     // create
     @PostMapping("/create-user")
@@ -137,6 +151,25 @@ public class UserController {
         InputStream resource = fileService.getResource(imageUploadPath, user.getUserProfileImage());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource, response.getOutputStream());
+    }
+
+    /* Gets cart of a particular user
+    *  Here we will be taking help of CartService
+    * */
+    @GetMapping("/user/{userId}/cart")
+    public ResponseEntity<CartDto> findUserCart(@PathVariable String userId) {
+        userService.getUserById(userId);
+        return new ResponseEntity<>(cartService.searchCartByUser(userId), HttpStatus.FOUND);
+    }
+
+    /**
+     *  Gets all the orders of a particular user
+     *
+     *  Here we will be taking help of Order service
+     * */
+    @GetMapping("/user/{userId}/orders")
+    public ResponseEntity<List<OrderDto>> findUserOrders(@PathVariable String userId) {
+        return new ResponseEntity<>(orderService.getAllOrdersOfUser(userId), HttpStatus.FOUND);
     }
 
 }
